@@ -4,7 +4,7 @@
   <title><![CDATA[Streaming Longitude]]></title>
   <link href="http://vinchinzu.github.io/atom.xml" rel="self"/>
   <link href="http://vinchinzu.github.io/"/>
-  <updated>2014-02-10T14:39:08-06:00</updated>
+  <updated>2014-02-10T14:40:33-06:00</updated>
   <id>http://vinchinzu.github.io/</id>
   <author>
     <name><![CDATA[Lucas Vinze]]></name>
@@ -87,7 +87,7 @@ var area = d3.svg.area()
     .y0(height)
     .y1(function(d) { return y(d.close); });
 
-var svg = d3.select("chart-1'").append("svg")
+var svg = d3.select("#chart-1'").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
