@@ -4,7 +4,7 @@
   <title><![CDATA[Streaming Longitude]]></title>
   <link href="http://vinchinzu.github.io/atom.xml" rel="self"/>
   <link href="http://vinchinzu.github.io/"/>
-  <updated>2014-02-10T10:17:59-06:00</updated>
+  <updated>2014-02-10T12:16:05-06:00</updated>
   <id>http://vinchinzu.github.io/</id>
   <author>
     <name><![CDATA[Lucas Vinze]]></name>
@@ -12,6 +12,163 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Add Some Javascript]]></title>
+    <link href="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript/"/>
+    <updated>2014-02-10T11:45:37-06:00</updated>
+    <id>http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript</id>
+    <content type="html"><![CDATA[<script src="http://d3js.org/d3.v2.js"></script>
+
+
+<p></p>
+
+<h2>See what can be done with Javascript:</h2>
+
+<p>I wanted to add dynamic graphs on the static build with Jekyll and Octopress, and still be able to push directly from the terminal line. This seems like a decent solution to start with. The trick is:</p>
+
+<ul>
+<li>adding the style tags in a div at the top</li>
+<li><p>adding the javascript source to d3 at the top of the post  <div>
+<pre><code class='html'>&lt;script src=&quot;<a href="http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;">http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;</a></code></pre>
+</div></p></li>
+<li><p>Adjusting the margins and container sizes</p></li>
+<li>add a div with ID to hold the graph</li>
+</ul>
+
+
+<p>Start with d3 library: with this tutorial <a href="http://robdodson.me/blog/2012/05/02/d3-js-and-octopress/">here</a></p>
+
+<div>
+  <style type="text/css">
+
+    .chart {
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      margin-top: -40px;
+    }
+
+    .bar {
+      fill: steelblue;
+    }
+
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+  </style>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+  var data = [6, 1, 2, 3, 5, 4];
+
+  var margin = {top: 40, right: 40, bottom: 40, left: 40},
+      width = $('.entry-content').width(),
+      height = 300;
+
+  $(window).resize(function() {
+    width = $('.entry-content').width();
+  });
+
+</script>
+
+
+
+
+<!-- D3.js Chart -->
+
+
+
+
+<div id='chart-1'></div>
+
+
+<script type='text/javascript'>
+(function() {
+
+  function draw() {
+
+    $('#chart-1').empty();
+
+    var x = d3.scale.linear()
+        .domain([0, d3.max(data)])
+        .range([0, width - margin.left - margin.right]);
+
+    var y = d3.scale.ordinal()
+        .domain(d3.range(data.length))
+        .rangeRoundBands([height - margin.top - margin.bottom, 0], 0.2);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient('bottom')
+        .tickPadding(8);
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient('left')
+        .tickPadding(8)
+        .tickSize(0);
+
+    var svg = d3.select('#chart-1').append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('class', 'chart')
+      .append('g')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+    svg.selectAll('.chart')
+        .data(data)
+      .enter().append('rect')
+        .attr('class', 'bar')
+        .attr('y', function(d, i) { return y(i) })
+        .attr('width', x)
+        .attr('height', y.rangeBand());
+
+    svg.append('g')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0, ' + y.rangeExtent()[1] + ')')
+        .call(xAxis);
+
+    svg.append('g')
+        .attr('class', 'y axis')
+        .call(yAxis)
+      .selectAll('text')
+        .text(function(d) { return String.fromCharCode(d + 65); });
+
+  }
+
+  draw();
+
+  $(window).resize(function() {
+    draw();
+  });
+
+})();
+</script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[World Beer Trade]]></title>
+    <link href="http://vinchinzu.github.io/blog/2014/02/10/world-beer-trade/"/>
+    <updated>2014-02-10T10:51:57-06:00</updated>
+    <id>http://vinchinzu.github.io/blog/2014/02/10/world-beer-trade</id>
+    <content type="html"><![CDATA[<p>The graph below shows a network graph of international trade between nations for Beer.</p>
+
+<p>Data is January 2013 from the UN Comtrade database.</p>
+
+<p><img src="http://vinchinzu.github.io/figs/2014-02-10-world-beer-trade/tradeplot.png" alt="center" /></p>
+
+<p><a href="http://vinchinzu.github.io/figs/2014-02-10-world-beer-trade/pdfplot.pdf">pdf download</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Chinese the New Lingua Franca]]></title>
@@ -69,15 +226,6 @@ Given these simple observations, I have two take-aways.</p>
 
 
 <p>Lucas Vinze is currently an exchange student at Shanghai Institute of International Studies, a Chinese international relations think tank. He is completing a Masters of International Affairs and Economics at the Bush School of Government and Public Service at Texas A&amp;M University. </p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Some Awesome Title]]></title>
-    <link href="http://vinchinzu.github.io/blog/2014/02/10/some-awesome-title/"/>
-    <updated>2014-02-10T09:41:27-06:00</updated>
-    <id>http://vinchinzu.github.io/blog/2014/02/10/some-awesome-title</id>
-    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   

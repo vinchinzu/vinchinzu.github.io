@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Trade Network Graphs - Streaming Longitude</title>
+  <title>Add Some Javascript - Streaming Longitude</title>
   <meta name="author" content="Lucas Vinze">
 
   
-  <meta name="description" content="">
+  <meta name="description" content="See what can be done with Javascript: I wanted to add dynamic graphs on the static build with Jekyll and Octopress, and still be able to push &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vinchinzu.github.io/blog/2014/02/05/trade-network-graphs">
+  <link rel="canonical" href="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Streaming Longitude" type="application/atom+xml">
@@ -66,7 +66,7 @@
   
   <header>
     
-      <h1 class="entry-title">Trade Network Graphs</h1>
+      <h1 class="entry-title">Add Some Javascript</h1>
     
     
       <p class="meta">
@@ -82,87 +82,146 @@
   
 
 
-<time datetime="2014-02-05T00:00:00-06:00" pubdate data-updated="true"></time>
+<time datetime="2014-02-10T11:45:37-06:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h3>Step 1</h3>
+<div class="entry-content"><script src="http://d3js.org/d3.v2.js"></script>
 
-<p>Gather data from UN Comtrade.
-  1. Choose your</p>
 
-<p><a href="http://comtrade.un.org/monthly/Main/Data.aspx">here</a>
-Create a log-in and account
-This allows downloads of 5000 lines each, so each query has to be small enough to account for this.
-Design the query based on exporter, importer, commodity (ies), period, and trade flow (import/export).
-Search for the appropriate HTS codes for the commodity classification.</p>
+<p></p>
 
-<h3>Step 2</h3>
+<h2>See what can be done with Javascript:</h2>
 
-<p>Open the R Console and process the source file:</p>
+<p>I wanted to add dynamic graphs on the static build with Jekyll and Octopress, and still be able to push directly from the terminal line. This seems like a decent solution to start with. The trick is:</p>
 
-<p>This script will directly process the csv file downloaded from Comtrade.</p>
+<ul>
+<li>adding the style tags in a div at the top</li>
+<li><p>adding the javascript source to d3 at the top of the post  <div>
+<pre><code class='html'>&lt;script src=&quot;<a href="http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;">http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;</a></code></pre>
+</div></p></li>
+<li><p>Adjusting the margins and container sizes</p></li>
+<li>add a div with ID to hold the graph</li>
+</ul>
 
-<p>Change the query file as needed.</p>
+
+<p>Start with d3 library: with this tutorial <a href="http://robdodson.me/blog/2012/05/02/d3-js-and-octopress/">here</a></p>
 
 <div>
-  <pre><code class='r'>library(network)
-library(plyr)
+  <style type="text/css">
 
-# setwd(&quot;./Downloads&quot;)
+    .chart {
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      margin-top: -40px;
+    }
 
-df = read.csv(&quot;QueryResults (34).csv&quot;, header = TRUE,
-                   stringsAsFactors = FALSE)
+    .bar {
+      fill: steelblue;
+    }
 
-## Take only the trade
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
 
-Ex.df = subset(df,subset = TradeFlowDescription == &quot;Exports&quot;, 
-                   c(&quot;ReporterDescription&quot;, &quot;PartnerDescription&quot;, &quot;Value&quot;))
-Ex.df &lt;- Ex.df[!Ex.df$PartnerDescription == &quot;World&quot;,]
-Ex.df &lt;- Ex.df[!Ex.df$ReporterDescription == &quot;EU-27&quot;,]
-
-Ex.df$Value &lt;- Ex.df$Value/1000
-
-## Sort the data and take only the top 80% of the trade
-Ex.df = arrange(Ex.df, desc(Value))
-
-Ex.df$sWine = scale(Ex.df$Value, center = FALSE)
-Ex.df$cs = cumsum(as.numeric(Ex.df$Value))
-Ex.df[Ex.df[, 1] == &quot;China, Hong Kong SAR &quot;, 1] = &quot;China, Hong Kong SAR&quot;
-
-## Adjust Top Percentage to be included
-Final.df = subset(Ex.df, cs &lt; tail(Ex.df$cs, 1) * 0.9)
-
-## Set edge and arrow size
-Final.df$edgeSize = with(Final.df, Value/sum(Value))
-Final.df$arrowSize = ifelse(Final.df$edgeSize * 30 &lt; 0.5 , 0.5,
-                                Final.df$edgeSize * 15)
-
-## Create the network and plot
-net = network(Final.df[, 1:2])
-plot(net, displaylabels = TRUE, label.col = &quot;steelblue&quot;,
-     edge.lwd = c(Final.df$edgeSize) * 100,
-     arrowhead.cex = c(Final.df$arrowSize),
-     label.cex = 0.5, vertex.border = &quot;white&quot;,
-     vertex.col = &quot;skyblue&quot;, edge.col = rgb(0, 0, 0, alpha = 0.5))
-
-
-
-
-
-pdf(file='pdfplot')
-plot(net, displaylabels = TRUE, label.col = &quot;steelblue&quot;,
-     edge.lwd = c(Final.df$edgeSize) * 100,
-     arrowhead.cex = c(Final.df$arrowSize),
-     label.cex = 0.5, vertex.border = &quot;white&quot;,
-     vertex.col = &quot;skyblue&quot;, edge.col = rgb(0, 0, 0, alpha = 0.5))
-dev.off()</code></pre>
+  </style>
 </div>
 
 
+
+
+<script type="text/javascript">
+
+  var data = [6, 1, 2, 3, 5, 4];
+
+  var margin = {top: 40, right: 40, bottom: 40, left: 40},
+      width = $('.entry-content').width(),
+      height = 300;
+
+  $(window).resize(function() {
+    width = $('.entry-content').width();
+  });
+
+</script>
+
+
+
+
+<!-- D3.js Chart -->
+
+
+
+
+<div id='chart-1'></div>
+
+
+<script type='text/javascript'>
+(function() {
+
+  function draw() {
+
+    $('#chart-1').empty();
+
+    var x = d3.scale.linear()
+        .domain([0, d3.max(data)])
+        .range([0, width - margin.left - margin.right]);
+
+    var y = d3.scale.ordinal()
+        .domain(d3.range(data.length))
+        .rangeRoundBands([height - margin.top - margin.bottom, 0], 0.2);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient('bottom')
+        .tickPadding(8);
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient('left')
+        .tickPadding(8)
+        .tickSize(0);
+
+    var svg = d3.select('#chart-1').append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('class', 'chart')
+      .append('g')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+    svg.selectAll('.chart')
+        .data(data)
+      .enter().append('rect')
+        .attr('class', 'bar')
+        .attr('y', function(d, i) { return y(i) })
+        .attr('width', x)
+        .attr('height', y.rangeBand());
+
+    svg.append('g')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0, ' + y.rangeExtent()[1] + ')')
+        .call(xAxis);
+
+    svg.append('g')
+        .attr('class', 'y axis')
+        .call(yAxis)
+      .selectAll('text')
+        .text(function(d) { return String.fromCharCode(d + 65); });
+
+  }
+
+  draw();
+
+  $(window).resize(function() {
+    draw();
+  });
+
+})();
+</script>
 
 </div>
 
@@ -186,21 +245,15 @@ dev.off()</code></pre>
   
 
 
-<time datetime="2014-02-05T00:00:00-06:00" pubdate data-updated="true"></time>
+<time datetime="2014-02-10T11:45:37-06:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/r/'>r</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vinchinzu.github.io/blog/2014/02/05/trade-network-graphs/" data-via="" data-counturl="http://vinchinzu.github.io/blog/2014/02/05/trade-network-graphs/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript/" data-via="" data-counturl="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript/" >Tweet</a>
   
   
   
@@ -209,10 +262,8 @@ dev.off()</code></pre>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/07/03/knitr-jekyll/" title="Previous Post: Blog with Knitr and Jekyll">&laquo; Blog with Knitr and Jekyll</a>
+        <a class="basic-alignment left" href="/blog/2014/02/10/world-beer-trade/" title="Previous Post: World Beer Trade">&laquo; World Beer Trade</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/02/10/chinese-the-new-lingua-franca/" title="Next Post: Chinese the New Lingua Franca">Chinese the New Lingua Franca &raquo;</a>
       
     </p>
   </footer>
