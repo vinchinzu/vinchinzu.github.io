@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Streaming Longitude]]></title>
-  <link href="http://yoursite.com/atom.xml" rel="self"/>
-  <link href="http://yoursite.com/"/>
-  <updated>2014-02-10T09:42:20-06:00</updated>
-  <id>http://yoursite.com/</id>
+  <link href="http://vinchinzu.github.io/atom.xml" rel="self"/>
+  <link href="http://vinchinzu.github.io/"/>
+  <updated>2014-02-10T09:56:45-06:00</updated>
+  <id>http://vinchinzu.github.io/</id>
   <author>
     <name><![CDATA[Lucas Vinze]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Some Awesome Title]]></title>
-    <link href="http://yoursite.com/blog/2014/02/10/some-awesome-title/"/>
+    <link href="http://vinchinzu.github.io/blog/2014/02/10/some-awesome-title/"/>
     <updated>2014-02-10T09:41:27-06:00</updated>
-    <id>http://yoursite.com/blog/2014/02/10/some-awesome-title</id>
+    <id>http://vinchinzu.github.io/blog/2014/02/10/some-awesome-title</id>
     <content type="html"><![CDATA[
 ]]></content>
   </entry>
