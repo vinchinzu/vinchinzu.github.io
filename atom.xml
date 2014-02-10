@@ -4,7 +4,7 @@
   <title><![CDATA[Streaming Longitude]]></title>
   <link href="http://vinchinzu.github.io/atom.xml" rel="self"/>
   <link href="http://vinchinzu.github.io/"/>
-  <updated>2014-02-10T13:42:18-06:00</updated>
+  <updated>2014-02-10T14:39:08-06:00</updated>
   <id>http://vinchinzu.github.io/</id>
   <author>
     <name><![CDATA[Lucas Vinze]]></name>
@@ -12,6 +12,129 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Js D3 Test]]></title>
+    <link href="http://vinchinzu.github.io/blog/2014/02/10/js-d3-test/"/>
+    <updated>2014-02-10T14:31:48-06:00</updated>
+    <id>http://vinchinzu.github.io/blog/2014/02/10/js-d3-test</id>
+    <content type="html"><![CDATA[<script src="http://d3js.org/d3.v2.js"></script>
+
+
+<p></p>
+
+<p>Graph?</p>
+
+<div>
+  <style type="text/css">
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.area {
+  fill: steelblue;
+}
+
+
+  </style>
+</div>
+
+
+
+
+<div id='chart-1'></div>
+
+
+
+
+<script type='text/javascript'>
+(function() {
+
+  function draw() {
+
+    $('#chart-1').empty();
+
+  var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var parseDate = d3.time.format("%d-%b-%y").parse;
+
+var x = d3.time.scale()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var area = d3.svg.area()
+    .x(function(d) { return x(d.date); })
+    .y0(height)
+    .y1(function(d) { return y(d.close); });
+
+var svg = d3.select("chart-1'").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.tsv("assets/data/data.tsv", function(error, data) {
+  data.forEach(function(d) {
+    d.date = parseDate(d.date);
+    d.close = +d.close;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+  y.domain([0, d3.max(data, function(d) { return d.close; })]);
+
+  svg.append("path")
+      .datum(data)
+      .attr("class", "area")
+      .attr("d", area);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Price ($)");
+
+  }
+
+  draw();
+
+  $(window).resize(function() {
+    draw();
+  });
+
+})();
+</script>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[HighCharts]]></title>
@@ -124,55 +247,6 @@ $(function() {
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Hamilton Graphs]]></title>
-    <link href="http://vinchinzu.github.io/blog/2014/02/10/hamilton-graphs/"/>
-    <updated>2014-02-10T12:46:21-06:00</updated>
-    <id>http://vinchinzu.github.io/blog/2014/02/10/hamilton-graphs</id>
-    <content type="html"><![CDATA[<div><script src='https://gist.github.com/1703449.js'></script>
-<noscript><pre><code>&lt;style type=&quot;text/css&quot;&gt;p {text-align:center;width: auto}&lt;/style&gt;
-Created by [Christopher Manning](http://www.christophermanning.org/projects/building-cubic-hamiltonian-graphs-from-lcf-notation/)
-
-Gallery
--------  
-[![Axle](https://gist.github.com/christophermanning/1703449/raw/img/graph-axle.png &quot;Axle&quot;)](http://bl.ocks.org/d/1703449/#/[-48,-32,3,14,16,-37,-42,48]22/0/0)
-[![Eight](https://gist.github.com/christophermanning/1703449/raw/img/graph-eight.png &quot;Eight&quot;)](http://bl.ocks.org/d/1703449/#/[25,50,75,100]100/0/0)
-[![Fibbobaci](https://gist.github.com/christophermanning/1703449/raw/img/graph-fibonacci.png &quot;Fibonacci&quot;)](http://bl.ocks.org/d/1703449/#/[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269, 2178309, 3524578, 5702887, 9227465, 14930352, 24157817, 39088169]43/0/1)
-[![Florets](https://gist.github.com/christophermanning/1703449/raw/img/graph-florets.png &quot;Florets&quot;)](http://bl.ocks.org/d/1703449/#/[10,9,8,7,6,5,4,3,2,1]10/0/0)
-[![Star](https://gist.github.com/christophermanning/1703449/raw/img/graph-star.png &quot;Star&quot;)](http://bl.ocks.org/d/1703449/#/[6,10]5/0/0)
-[![Mosaic](https://gist.github.com/christophermanning/1703449/raw/img/graph-mosaic.png &quot;Mosaic&quot;)](http://bl.ocks.org/d/1703449/#/[500]1000/0/1)
-[![Original](https://gist.github.com/christophermanning/1703449/raw/img/graph-original.png &quot;Original&quot;)](http://bl.ocks.org/d/1703449/#/[30,-2,2,21,-2,2,12,-2,2,-12,-2,2,-21,-2,2,30,-2,2,-12,-2,2,21,-2,2,-21,-2,2,12,-2,2]2/1/0)
-[![Spiral](https://gist.github.com/christophermanning/1703449/raw/img/graph-spiral.png &quot;Spiral&quot;)](http://bl.ocks.org/d/1703449/#/[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]4/0/1)
-[![Sun](https://gist.github.com/christophermanning/1703449/raw/img/graph-sun.png &quot;Sun&quot;)](http://bl.ocks.org/d/1703449/#/[-48,-45]21/0/0)
-[![Pods](https://gist.github.com/christophermanning/1703449/raw/img/graph-pods.png &quot;Pods&quot;)](http://bl.ocks.org/d/1703449/#/[3553353424234324324]1022/0/0)
-
-Controls
---------
-  * Place your cursor near a number in the LCF code and use the up/down
-    arrow or the mousewheel to increment or decrement that number. Hold down
-    the control and or shift key to increment or decrement by 10 or 100. 
-
-Interesting Graphs
-------------------
-  * [Stitching a Torus Together](?lcfCode=[10]100&amp;animationSpeed=1&amp;lockVertices=0)
-  * [25 Möbius Ladder](?lcfCode=[-25]50&amp;animationSpeed=1&amp;lockVertices=0)
-  * Please share interesting graphs you find: [@cmanning88](https://twitter.com/cmanning88)
-
-References
-----------
-  * [Project Summary and Changelog](http://www.christophermanning.org/projects/building-cubic-hamiltonian-graphs-from-lcf-notation/)
-  * [Wikipedia article on LCF notation](http://en.wikipedia.org/wiki/LCF_notation)
-  * [Wolfram MathWorld article on LCF notation](http://mathworld.wolfram.com/LCFNotation.html)
-  * [d3.js Force Layout](https://github.com/mbostock/d3/wiki/Force-Layout)
-
-[Run this gist at bl.ocks.org](http://bl.ocks.org/1703449)
-</code></pre></noscript></div>
-
-
-<p>Build by Christopher Manning</p>
 ]]></content>
   </entry>
   
@@ -326,7 +400,7 @@ function formatLocation(p, k) {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Add Some Javascript]]></title>
+    <title type="html"><![CDATA[Posting With D3 Graphics]]></title>
     <link href="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript/"/>
     <updated>2014-02-10T11:45:37-06:00</updated>
     <id>http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript</id>
@@ -378,7 +452,7 @@ function formatLocation(p, k) {
 
 <script type="text/javascript">
 
-  var data = [6, 1, 2, 3, 5, 4];
+  var data = [6, 1, 2, 3, 5, 4,8];
 
   var margin = {top: 40, right: 40, bottom: 40, left: 40},
       width = $('.entry-content').width(),
@@ -399,6 +473,8 @@ function formatLocation(p, k) {
 
 
 <div id='chart-1'></div>
+
+
 
 
 <script type='text/javascript'>
@@ -436,7 +512,7 @@ function formatLocation(p, k) {
 
     svg.selectAll('.chart')
         .data(data)
-      .enter().append('rect')
+        .enter().append('rect')
         .attr('class', 'bar')
         .attr('y', function(d, i) { return y(i) })
         .attr('width', x)
@@ -463,6 +539,8 @@ function formatLocation(p, k) {
 
 })();
 </script>
+
+
 
 ]]></content>
   </entry>
