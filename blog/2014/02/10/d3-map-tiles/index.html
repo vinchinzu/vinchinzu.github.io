@@ -5,11 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Add Some Javascript - Streaming Longitude</title>
+  <title>D3 Map Tiles - Streaming Longitude</title>
   <meta name="author" content="Lucas Vinze">
 
   
-  <meta name="description" content="See what can be done with Javascript: I wanted to add dynamic graphs on the static build with Jekyll and Octopress, and still be able to push &hellip;">
+  <meta name="description" content=".map { position: relative; overflow: hidden;
+} .layer { position: absolute;
+} .tile { pointer-events: none; position: absolute; width: 256px; height &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript">
+  <link rel="canonical" href="http://vinchinzu.github.io/blog/2014/02/10/d3-map-tiles">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Streaming Longitude" type="application/atom+xml">
@@ -67,7 +69,7 @@
   
   <header>
     
-      <h1 class="entry-title">Add Some Javascript</h1>
+      <h1 class="entry-title">D3 Map Tiles</h1>
     
     
       <p class="meta">
@@ -83,7 +85,7 @@
   
 
 
-<time datetime="2014-02-10T11:45:37-06:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
+<time datetime="2014-02-10T12:23:56-06:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
         
       </p>
     
@@ -95,40 +97,35 @@
 
 <p></p>
 
-<h2>See what can be done with Javascript:</h2>
-
-<p>I wanted to add dynamic graphs on the static build with Jekyll and Octopress, and still be able to push directly from the terminal line. This seems like a decent solution to start with. The trick is:</p>
-
-<ul>
-<li>adding the style tags in a div at the top</li>
-<li><p>adding the javascript source to d3 at the top of the post  <div>
-<pre><code class='html'>&lt;script src=&quot;<a href="http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;">http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;</a></code></pre>
-</div></p></li>
-<li><p>Adjusting the margins and container sizes</p></li>
-<li>add a div with ID to hold the graph</li>
-</ul>
+<script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
 
 
-<p>Start with d3 library: with this tutorial <a href="http://robdodson.me/blog/2012/05/02/d3-js-and-octopress/">here</a></p>
+
 
 <div>
   <style type="text/css">
 
-    .chart {
-      font-family: Arial, sans-serif;
-      font-size: 10px;
-      margin-top: -40px;
-    }
+ .map {
+  position: relative;
+  overflow: hidden;
+}
 
-    .bar {
-      fill: steelblue;
-    }
+.layer {
+  position: absolute;
+}
 
-    .axis path, .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
+.tile {
+  pointer-events: none;
+  position: absolute;
+  width: 256px;
+  height: 256px;
+}
+
+.info {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
 
   </style>
 </div>
@@ -137,8 +134,6 @@
 
 
 <script type="text/javascript">
-
-  var data = [6, 1, 2, 3, 5, 4];
 
   var margin = {top: 40, right: 40, bottom: 40, left: 40},
       width = $('.entry-content').width(),
@@ -153,75 +148,89 @@
 
 
 
-<!-- D3.js Chart -->
-
-
-
-
 <div id='chart-1'></div>
 
 
-<script type='text/javascript'>
-(function() {
 
-  function draw() {
 
-    $('#chart-1').empty();
+<script>
 
-    var x = d3.scale.linear()
-        .domain([0, d3.max(data)])
-        .range([0, width - margin.left - margin.right]);
+var width = Math.max(960, window.innerWidth),
+    height = Math.max(500, window.innerHeight),
+    prefix = prefixMatch(["webkit", "ms", "Moz", "O"]);
 
-    var y = d3.scale.ordinal()
-        .domain(d3.range(data.length))
-        .rangeRoundBands([height - margin.top - margin.bottom, 0], 0.2);
+var tile = d3.geo.tile()
+    .size([width, height]);
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient('bottom')
-        .tickPadding(8);
+var projection = d3.geo.mercator();
 
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient('left')
-        .tickPadding(8)
-        .tickSize(0);
+var zoom = d3.behavior.zoom()
+    .scale(1 << 12)
+    .scaleExtent([1 << 9, 1 << 23])
+    .translate([width / 2, height / 2])
+    .on("zoom", zoomed);
 
-    var svg = d3.select('#chart-1').append('svg')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('class', 'chart')
-      .append('g')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+var map = d3.select("chart-1").append("div")
+    .attr("class", "map")
+    .style("width", width + "px")
+    .style("height", height + "px")
+    .call(zoom)
+    .on("mousemove", mousemoved);
 
-    svg.selectAll('.chart')
-        .data(data)
-      .enter().append('rect')
-        .attr('class', 'bar')
-        .attr('y', function(d, i) { return y(i) })
-        .attr('width', x)
-        .attr('height', y.rangeBand());
+var layer = map.append("div")
+    .attr("class", "layer");
 
-    svg.append('g')
-        .attr('class', 'x axis')
-        .attr('transform', 'translate(0, ' + y.rangeExtent()[1] + ')')
-        .call(xAxis);
+var info = map.append("div")
+    .attr("class", "info");
 
-    svg.append('g')
-        .attr('class', 'y axis')
-        .call(yAxis)
-      .selectAll('text')
-        .text(function(d) { return String.fromCharCode(d + 65); });
+zoomed();
 
-  }
+function zoomed() {
+  var tiles = tile
+      .scale(zoom.scale())
+      .translate(zoom.translate())
+      ();
 
-  draw();
+  projection
+      .scale(zoom.scale() / 2 / Math.PI)
+      .translate(zoom.translate());
 
-  $(window).resize(function() {
-    draw();
-  });
+  var image = layer
+      .style(prefix + "transform", matrix3d(tiles.scale, tiles.translate))
+    .selectAll(".tile")
+      .data(tiles, function(d) { return d; });
 
-})();
+  image.exit()
+      .remove();
+
+  image.enter().append("img")
+      .attr("class", "tile")
+      .attr("src", function(d) { return "http://" + ["a", "b", "c", "d"][Math.random() * 4 | 0] + ".tiles.mapbox.com/v3/examples.map-vyofok3q/" + d[2] + "/" + d[0] + "/" + d[1] + ".png"; })
+      .style("left", function(d) { return (d[0] << 8) + "px"; })
+      .style("top", function(d) { return (d[1] << 8) + "px"; });
+}
+
+function mousemoved() {
+  info.text(formatLocation(projection.invert(d3.mouse(this)), zoom.scale()));
+}
+
+function matrix3d(scale, translate) {
+  var k = scale / 256, r = scale % 1 ? Number : Math.round;
+  return "matrix3d(" + [k, 0, 0, 0, 0, k, 0, 0, 0, 0, k, 0, r(translate[0] * scale), r(translate[1] * scale), 0, 1 ] + ")";
+}
+
+function prefixMatch(p) {
+  var i = -1, n = p.length, s = document.body.style;
+  while (++i < n) if (p[i] + "Transform" in s) return "-" + p[i].toLowerCase() + "-";
+  return "";
+}
+
+function formatLocation(p, k) {
+  var format = d3.format("." + Math.floor(Math.log(k) / 2 - 2) + "f");
+  return (p[1] < 0 ? format(-p[1]) + "°S" : format(p[1]) + "°N") + " "
+       + (p[0] < 0 ? format(-p[0]) + "°W" : format(p[0]) + "°E");
+}
+
 </script>
 
 </div>
@@ -246,7 +255,7 @@
   
 
 
-<time datetime="2014-02-10T11:45:37-06:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
+<time datetime="2014-02-10T12:23:56-06:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
       
 
 
@@ -254,7 +263,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript/" data-via="" data-counturl="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vinchinzu.github.io/blog/2014/02/10/d3-map-tiles/" data-via="" data-counturl="http://vinchinzu.github.io/blog/2014/02/10/d3-map-tiles/" >Tweet</a>
   
   
   
@@ -263,10 +272,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/02/10/world-beer-trade/" title="Previous Post: World Beer Trade">&laquo; World Beer Trade</a>
+        <a class="basic-alignment left" href="/blog/2014/02/10/add-some-javascript/" title="Previous Post: Add some javascript">&laquo; Add some javascript</a>
       
       
-        <a class="basic-alignment right" href="/blog/2014/02/10/d3-map-tiles/" title="Next Post: D3 Map Tiles">D3 Map Tiles &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2014/02/10/hamilton-graphs/" title="Next Post: Hamilton Graphs">Hamilton Graphs &raquo;</a>
       
     </p>
   </footer>
