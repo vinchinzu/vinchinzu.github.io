@@ -4,7 +4,7 @@
   <title><![CDATA[Category: R | Streaming Longitude]]></title>
   <link href="http://vinchinzu.github.io/blog/categories/r/atom.xml" rel="self"/>
   <link href="http://vinchinzu.github.io/"/>
-  <updated>2014-02-11T12:53:40-06:00</updated>
+  <updated>2014-02-11T12:57:00-06:00</updated>
   <id>http://vinchinzu.github.io/</id>
   <author>
     <name><![CDATA[Lucas Vinze]]></name>
@@ -37,72 +37,74 @@ Search for the appropriate HTS codes for the commodity classification.</p>
 
 <p>Change the query file as needed.</p>
 
-<p>{% highlight r %}
-library(network)
-library(plyr)</p>
+<p><div>
+  <pre><code class='r'>library(network)
+library(plyr)&lt;/p&gt;
 
-<h1>setwd(&ldquo;./Downloads&rdquo;)</h1>
+&lt;h1&gt;setwd(&amp;ldquo;./Downloads&amp;rdquo;)&lt;/h1&gt;
 
-<p>df = read.csv(&ldquo;QueryResults (34).csv&rdquo;, header = TRUE,</p>
+&lt;p&gt;df = read.csv(&amp;ldquo;QueryResults (34).csv&amp;rdquo;, header = TRUE,&lt;/p&gt;
 
-<pre><code>               stringsAsFactors = FALSE)
-</code></pre>
+&lt;pre&gt;&lt;code&gt;               stringsAsFactors = FALSE)
+&lt;/code&gt;&lt;/pre&gt;
 
-<h2>Take only the trade</h2>
+&lt;h2&gt;Take only the trade&lt;/h2&gt;
 
-<p>Ex.df = subset(df,subset = TradeFlowDescription == &ldquo;Exports&rdquo;,</p>
+&lt;p&gt;Ex.df = subset(df,subset = TradeFlowDescription == &amp;ldquo;Exports&amp;rdquo;,&lt;/p&gt;
 
-<pre><code>               c("ReporterDescription", "PartnerDescription", "Value"))
-</code></pre>
+&lt;pre&gt;&lt;code&gt;               c(&quot;ReporterDescription&quot;, &quot;PartnerDescription&quot;, &quot;Value&quot;))
+&lt;/code&gt;&lt;/pre&gt;
 
-<p>Ex.df &lt;&ndash; Ex.df[!Ex.df$PartnerDescription == &ldquo;World&rdquo;,]
-Ex.df &lt;&ndash; Ex.df[!Ex.df$ReporterDescription == &ldquo;EU-27&rdquo;,]</p>
+&lt;p&gt;Ex.df &amp;lt;&amp;ndash; Ex.df[!Ex.df$PartnerDescription == &amp;ldquo;World&amp;rdquo;,]
+Ex.df &amp;lt;&amp;ndash; Ex.df[!Ex.df$ReporterDescription == &amp;ldquo;EU-27&amp;rdquo;,]&lt;/p&gt;
 
-<p>Ex.df$Value &lt;&ndash; Ex.df$Value/1000</p>
+&lt;p&gt;Ex.df$Value &amp;lt;&amp;ndash; Ex.df$Value/1000&lt;/p&gt;
 
-<h2>Sort the data and take only the top 80% of the trade</h2>
+&lt;h2&gt;Sort the data and take only the top 80% of the trade&lt;/h2&gt;
 
-<p>Ex.df = arrange(Ex.df, desc(Value))</p>
+&lt;p&gt;Ex.df = arrange(Ex.df, desc(Value))&lt;/p&gt;
 
-<p>Ex.df$sWine = scale(Ex.df$Value, center = FALSE)
+&lt;p&gt;Ex.df$sWine = scale(Ex.df$Value, center = FALSE)
 Ex.df$cs = cumsum(as.numeric(Ex.df$Value))
-Ex.df[Ex.df[, 1] == &ldquo;China, Hong Kong SAR &rdquo;, 1] = &ldquo;China, Hong Kong SAR&rdquo;</p>
+Ex.df[Ex.df[, 1] == &amp;ldquo;China, Hong Kong SAR &amp;rdquo;, 1] = &amp;ldquo;China, Hong Kong SAR&amp;rdquo;&lt;/p&gt;
 
-<h2>Adjust Top Percentage to be included</h2>
+&lt;h2&gt;Adjust Top Percentage to be included&lt;/h2&gt;
 
-<p>Final.df = subset(Ex.df, cs &lt; tail(Ex.df$cs, 1) * 0.9)</p>
+&lt;p&gt;Final.df = subset(Ex.df, cs &amp;lt; tail(Ex.df$cs, 1) * 0.9)&lt;/p&gt;
 
-<h2>Set edge and arrow size</h2>
+&lt;h2&gt;Set edge and arrow size&lt;/h2&gt;
 
-<p>Final.df$edgeSize = with(Final.df, Value/sum(Value))
-Final.df$arrowSize = ifelse(Final.df$edgeSize * 30 &lt; 0.5 , 0.5,</p>
+&lt;p&gt;Final.df$edgeSize = with(Final.df, Value/sum(Value))
+Final.df$arrowSize = ifelse(Final.df$edgeSize * 30 &amp;lt; 0.5 , 0.5,&lt;/p&gt;
 
-<pre><code>                            Final.df$edgeSize * 15)
-</code></pre>
+&lt;pre&gt;&lt;code&gt;                            Final.df$edgeSize * 15)
+&lt;/code&gt;&lt;/pre&gt;
 
-<h2>Create the network and plot</h2>
+&lt;h2&gt;Create the network and plot&lt;/h2&gt;
 
-<p>net = network(Final.df[, 1:2])
-plot(net, displaylabels = TRUE, label.col = &ldquo;steelblue&rdquo;,</p>
+&lt;p&gt;net = network(Final.df[, 1:2])
+plot(net, displaylabels = TRUE, label.col = &amp;ldquo;steelblue&amp;rdquo;,&lt;/p&gt;
 
-<pre><code> edge.lwd = c(Final.df$edgeSize) * 100,
+&lt;pre&gt;&lt;code&gt; edge.lwd = c(Final.df$edgeSize) * 100,
  arrowhead.cex = c(Final.df$arrowSize),
- label.cex = 0.5, vertex.border = "white",
- vertex.col = "skyblue", edge.col = rgb(0, 0, 0, alpha = 0.5))
-</code></pre>
+ label.cex = 0.5, vertex.border = &quot;white&quot;,
+ vertex.col = &quot;skyblue&quot;, edge.col = rgb(0, 0, 0, alpha = 0.5))
+&lt;/code&gt;&lt;/pre&gt;
 
-<p>pdf(file=&lsquo;pdfplot&rsquo;)
-plot(net, displaylabels = TRUE, label.col = &ldquo;steelblue&rdquo;,</p>
+&lt;p&gt;pdf(file=&amp;lsquo;pdfplot&amp;rsquo;)
+plot(net, displaylabels = TRUE, label.col = &amp;ldquo;steelblue&amp;rdquo;,&lt;/p&gt;
 
-<pre><code> edge.lwd = c(Final.df$edgeSize) * 100,
+&lt;pre&gt;&lt;code&gt; edge.lwd = c(Final.df$edgeSize) * 100,
  arrowhead.cex = c(Final.df$arrowSize),
- label.cex = 0.5, vertex.border = "white",
- vertex.col = "skyblue", edge.col = rgb(0, 0, 0, alpha = 0.5))
-</code></pre>
+ label.cex = 0.5, vertex.border = &quot;white&quot;,
+ vertex.col = &quot;skyblue&quot;, edge.col = rgb(0, 0, 0, alpha = 0.5))
+&lt;/code&gt;&lt;/pre&gt;
 
-<p>dev.off()</p>
+&lt;p&gt;dev.off()&lt;/p&gt;
 
-<p>{% endhighlight %}</p>
+&lt;p&gt;</code></pre>
+</div>
+</p>
 ]]></content>
   </entry>
   
@@ -128,21 +130,22 @@ A brief tutorial on building this blog is available
 
 <p>Open the R Console and process the source file:</p>
 
-<p>{% highlight r %}
-KnitPost &lt;&ndash; function(input, base.url = &ldquo;/&rdquo;) {</p>
+<p><div>
+  <pre><code class='r'>KnitPost &amp;lt;&amp;ndash; function(input, base.url = &amp;ldquo;/&amp;rdquo;) {&lt;/p&gt;
 
-<pre><code>require(knitr)
+&lt;pre&gt;&lt;code&gt;require(knitr)
 opts_knit$set(base.url = base.url)
-fig.path &lt;- paste0("figs/", sub(".Rmd$", "", basename(input)), "/")
+fig.path &amp;lt;- paste0(&quot;figs/&quot;, sub(&quot;.Rmd$&quot;, &quot;&quot;, basename(input)), &quot;/&quot;)
 opts_chunk$set(fig.path = fig.path)
-opts_chunk$set(fig.cap = "center")
+opts_chunk$set(fig.cap = &quot;center&quot;)
 render_jekyll()
 knit(input, envir = parent.frame())
-</code></pre>
+&lt;/code&gt;&lt;/pre&gt;
 
-<p>}
-KnitPost(&ldquo;2012-07-03-knitr-jekyll.Rmd&rdquo;)
-{% endhighlight %}</p>
+&lt;p&gt;}
+KnitPost(&amp;ldquo;2012-07-03-knitr-jekyll.Rmd&amp;rdquo;)</code></pre>
+</div>
+</p>
 
 <h3>Step 3</h3>
 
@@ -170,41 +173,47 @@ folder located at the root of the repository.</p>
 
 <p>Here are a few examples of embedding R code:</p>
 
-<p>{% highlight r %}
-summary(cars)
-{% endhighlight %}</p>
+<p><div>
+  <pre><code class='r'>summary(cars)</code></pre>
+</div>
+</p>
 
-<p>{% highlight text %}</p>
+<p><div>
+  <pre><code class='text'>&lt;/p&gt;
 
-<h2>speed           dist</h2>
+&lt;h2&gt;speed           dist&lt;/h2&gt;
 
-<h2>Min.   : 4.0   Min.   :  2</h2>
+&lt;h2&gt;Min.   : 4.0   Min.   :  2&lt;/h2&gt;
 
-<h2>1st Qu.:12.0   1st Qu.: 26</h2>
+&lt;h2&gt;1st Qu.:12.0   1st Qu.: 26&lt;/h2&gt;
 
-<h2>Median :15.0   Median : 36</h2>
+&lt;h2&gt;Median :15.0   Median : 36&lt;/h2&gt;
 
-<h2>Mean   :15.4   Mean   : 43</h2>
+&lt;h2&gt;Mean   :15.4   Mean   : 43&lt;/h2&gt;
 
-<h2>3rd Qu.:19.0   3rd Qu.: 56</h2>
+&lt;h2&gt;3rd Qu.:19.0   3rd Qu.: 56&lt;/h2&gt;
 
-<h2>Max.   :25.0   Max.   :120</h2>
+&lt;h2&gt;Max.   :25.0   Max.   :120&lt;/h2&gt;
 
-<p>{% endhighlight %}</p>
+&lt;p&gt;</code></pre>
+</div>
+</p>
 
-<p>{% highlight r %}
-par(mar = c(4, 4, 0.1, 0.1), omi = c(0, 0, 0, 0))
-plot(cars)
-{% endhighlight %}</p>
+<p><div>
+  <pre><code class='r'>par(mar = c(4, 4, 0.1, 0.1), omi = c(0, 0, 0, 0))
+plot(cars)</code></pre>
+</div>
+</p>
 
 <p><img src="/figs/2012-07-03-knitr-jekyll/fig1.png" alt="center" /></p>
 
 <h5>Figure 1: Caption</h5>
 
-<p>{% highlight r %}
-par(mar = c(2.5, 2.5, 0.5, 0.1), omi = c(0, 0, 0, 0))
-filled.contour(volcano)
-{% endhighlight %}</p>
+<p><div>
+  <pre><code class='r'>par(mar = c(2.5, 2.5, 0.5, 0.1), omi = c(0, 0, 0, 0))
+filled.contour(volcano)</code></pre>
+</div>
+</p>
 
 <p><img src="/figs/2012-07-03-knitr-jekyll/fig2.png" alt="center" /></p>
 
@@ -212,49 +221,53 @@ filled.contour(volcano)
 
 <p>And don&rsquo;t forget your session information for proper reproducible research.</p>
 
-<p>{% highlight r %}
-sessionInfo()
-{% endhighlight %}</p>
+<p><div>
+  <pre><code class='r'>sessionInfo()</code></pre>
+</div>
+</p>
 
-<p>{% highlight text %}</p>
+<p><div>
+  <pre><code class='text'>&lt;/p&gt;
 
-<h2>R version 3.0.2 (2013-09-25)</h2>
+&lt;h2&gt;R version 3.0.2 (2013-09-25)&lt;/h2&gt;
 
-<h2>Platform: i386-w64-mingw32/i386 (32-bit)</h2>
+&lt;h2&gt;Platform: i386-w64-mingw32/i386 (32-bit)&lt;/h2&gt;
 
-<h2></h2>
+&lt;h2&gt;&lt;/h2&gt;
 
-<h2>locale:</h2>
+&lt;h2&gt;locale:&lt;/h2&gt;
 
-<h2>[1] LC_COLLATE=English_United States.1252</h2>
+&lt;h2&gt;[1] LC_COLLATE=English_United States.1252&lt;/h2&gt;
 
-<h2>[2] LC_CTYPE=English_United States.1252</h2>
+&lt;h2&gt;[2] LC_CTYPE=English_United States.1252&lt;/h2&gt;
 
-<h2>[3] LC_MONETARY=English_United States.1252</h2>
+&lt;h2&gt;[3] LC_MONETARY=English_United States.1252&lt;/h2&gt;
 
-<h2>[4] LC_NUMERIC=C</h2>
+&lt;h2&gt;[4] LC_NUMERIC=C&lt;/h2&gt;
 
-<h2>[5] LC_TIME=English_United States.1252</h2>
+&lt;h2&gt;[5] LC_TIME=English_United States.1252&lt;/h2&gt;
 
-<h2></h2>
+&lt;h2&gt;&lt;/h2&gt;
 
-<h2>attached base packages:</h2>
+&lt;h2&gt;attached base packages:&lt;/h2&gt;
 
-<h2>[1] stats     graphics  grDevices utils     datasets  methods   base</h2>
+&lt;h2&gt;[1] stats     graphics  grDevices utils     datasets  methods   base&lt;/h2&gt;
 
-<h2></h2>
+&lt;h2&gt;&lt;/h2&gt;
 
-<h2>other attached packages:</h2>
+&lt;h2&gt;other attached packages:&lt;/h2&gt;
 
-<h2>[1] knitr_1.5</h2>
+&lt;h2&gt;[1] knitr_1.5&lt;/h2&gt;
 
-<h2></h2>
+&lt;h2&gt;&lt;/h2&gt;
 
-<h2>loaded via a namespace (and not attached):</h2>
+&lt;h2&gt;loaded via a namespace (and not attached):&lt;/h2&gt;
 
-<h2>[1] evaluate_0.5.1 formatR_0.10   stringr_0.6.2  tools_3.0.2</h2>
+&lt;h2&gt;[1] evaluate_0.5.1 formatR_0.10   stringr_0.6.2  tools_3.0.2&lt;/h2&gt;
 
-<p>{% endhighlight %}</p>
+&lt;p&gt;</code></pre>
+</div>
+</p>
 ]]></content>
   </entry>
   
