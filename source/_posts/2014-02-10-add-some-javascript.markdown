@@ -16,7 +16,7 @@ I wanted to add dynamic graphs on the static build with Jekyll and Octopress, an
 * adding the style tags in a div at the top
 * adding the javascript source to d3 at the top of the post	 {% highlight html %} <script src="http://d3js.org/d3.v2.js"></script>  {% endhighlight %} 
 * Adjusting the margins and container sizes
-* add a div with ID to hold the graph
+* Add	 a div with ID to hold the graph
 
 
 Start with d3 library: with this tutorial [here](http://robdodson.me/blog/2012/05/02/d3-js-and-octopress/)
