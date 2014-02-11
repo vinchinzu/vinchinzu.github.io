@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Add some javascript"
+title: "Posting with D3 graphics"
 date: 2014-02-10 11:45:37 -0600
 comments: true
 categories: 
@@ -46,7 +46,7 @@ Start with d3 library: with this tutorial [here](http://robdodson.me/blog/2012/0
 
 <script type="text/javascript">
 
-  var data = [6, 1, 2, 3, 5, 4];
+  var data = [6, 1, 2, 3, 5, 4,8];
 
   var margin = {top: 40, right: 40, bottom: 40, left: 40},
       width = $('.entry-content').width(),
@@ -63,6 +63,7 @@ Start with d3 library: with this tutorial [here](http://robdodson.me/blog/2012/0
 
 
 <div id='chart-1'></div>
+
 <script type='text/javascript'>
 (function() {
 
@@ -98,7 +99,7 @@ Start with d3 library: with this tutorial [here](http://robdodson.me/blog/2012/0
 
     svg.selectAll('.chart')
         .data(data)
-      .enter().append('rect')
+        .enter().append('rect')
         .attr('class', 'bar')
         .attr('y', function(d, i) { return y(i) })
         .attr('width', x)
@@ -125,3 +126,5 @@ Start with d3 library: with this tutorial [here](http://robdodson.me/blog/2012/0
 
 })();
 </script>
+
+
