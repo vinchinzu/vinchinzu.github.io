@@ -4,7 +4,7 @@
   <title><![CDATA[Streaming Longitude]]></title>
   <link href="http://vinchinzu.github.io/atom.xml" rel="self"/>
   <link href="http://vinchinzu.github.io/"/>
-  <updated>2014-02-11T12:57:00-06:00</updated>
+  <updated>2014-02-11T13:08:02-06:00</updated>
   <id>http://vinchinzu.github.io/</id>
   <author>
     <name><![CDATA[Lucas Vinze]]></name>
@@ -28,18 +28,21 @@
 <div>
   <style type="text/css">
 
+    .chart {
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      margin-top: -40px;
+    }
 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
+    .bar {
+      fill: steelblue;
+    }
 
-.area {
-  fill: steelblue;
-}
-
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
 
   </style>
 </div>
@@ -47,7 +50,31 @@
 
 
 
-<div id='chart-2'></div>
+<script type="text/javascript">
+
+  var data = [6, 1, 2, 3, 5, 4,8];
+
+  var margin = {top: 40, right: 40, bottom: 40, left: 40},
+      width = $('.entry-content').width(),
+      height = 300;
+
+  $(window).resize(function() {
+    width = $('.entry-content').width();
+  });
+
+</script>
+
+
+
+
+<div id='test-1'></div>
+
+
+
+
+<script type="text/javascript">
+  d3.select("#test-1").append("p").text("New paragraph!");
+</script>
 
 
 
