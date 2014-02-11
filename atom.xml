@@ -4,7 +4,7 @@
   <title><![CDATA[Streaming Longitude]]></title>
   <link href="http://vinchinzu.github.io/atom.xml" rel="self"/>
   <link href="http://vinchinzu.github.io/"/>
-  <updated>2014-02-10T14:40:33-06:00</updated>
+  <updated>2014-02-11T10:14:46-06:00</updated>
   <id>http://vinchinzu.github.io/</id>
   <author>
     <name><![CDATA[Lucas Vinze]]></name>
@@ -23,7 +23,35 @@
 
 <p></p>
 
-<p>Graph?</p>
+<p><em>Problem:</em> Adding scalable vector images (svg) files within the octopress blogging framework. This is a prerequisite to usign the D3 javascript library that allows to build powerful visualization and data-driven pages.</p>
+
+<p><svg width="300" height="100">
+<rect x="0" y="0" width="500" height="50"/>
+</svg></p>
+
+<p><svg width="300" height="100">
+<circle cx="250" cy="25" r="25"/>
+<line x1="100" y1 = "70" x2 ="300" y2 = "100" stroke="black"/></p>
+
+<p><text x="250" y="25" font-family="serif" font-size="25" fill="grey"> Easy Does it</text>
+</svg></p>
+
+<script type="text/javascript">
+
+  var data = "assets/data/data.tsv"
+
+  var margin = {top: 40, right: 40, bottom: 40, left: 40},
+      width = $('.entry-content').width(),
+      height = 300;
+
+  $(window).resize(function() {
+    width = $('.entry-content').width();
+  });
+
+</script>
+
+
+
 
 <div>
   <style type="text/css">
@@ -50,7 +78,7 @@ body {
 
 
 
-<div id='chart-1'></div>
+<div id='chart-2'></div>
 
 
 
@@ -60,7 +88,7 @@ body {
 
   function draw() {
 
-    $('#chart-1').empty();
+    $('#chart-2').empty();
 
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
@@ -87,13 +115,13 @@ var area = d3.svg.area()
     .y0(height)
     .y1(function(d) { return y(d.close); });
 
-var svg = d3.select("#chart-1'").append("svg")
+var svg = d3.select('#chart-2).append('svg')
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.tsv("assets/data/data.tsv", function(error, data) {
+d3.tsv(data, function(error, data) {
   data.forEach(function(d) {
     d.date = parseDate(d.date);
     d.close = +d.close;
@@ -550,9 +578,15 @@ function formatLocation(p, k) {
     <link href="http://vinchinzu.github.io/blog/2014/02/10/world-beer-trade/"/>
     <updated>2014-02-10T10:51:57-06:00</updated>
     <id>http://vinchinzu.github.io/blog/2014/02/10/world-beer-trade</id>
-    <content type="html"><![CDATA[<p>The graph below shows a network graph of international trade between nations for Beer.</p>
+    <content type="html"><![CDATA[<p><em>Problem:</em> Finding a good way to visually analyze world trade data. The UN Comtrade website has a great interfacte to download current data (2010-Present) from most countries. However, how can we make sense of severel hundred thousand lines of data from a top down view.</p>
 
-<p>Data is January 2013 from the UN Comtrade database.</p>
+<p><em>Solution:</em> Using the R statistical programming language, it is easy to condense this data into a network graph that shows the density of trade between nations and the linkages for different producucts.
+An outline is found <a href="2014/02/05/trade-network-graphs/">here</a>
+As an examples, I have downloaded January 2013 data for Beer (<a href="http://hts.usitc.gov/">HTS code</a>: 2203) he graph below shows a network graph of international trade between nations for Beer.</p>
+
+<p>Primary Analysis: <br/>
+1. The trade is limited to the top 80% of interactions so that the smaller countries do not clutter up the image.
+2. It is immediately apparent</p>
 
 <p><img src="http://vinchinzu.github.io/figs/2014-02-10-world-beer-trade/tradeplot.png" alt="center" /></p>
 

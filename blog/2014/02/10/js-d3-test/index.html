@@ -9,10 +9,7 @@
   <meta name="author" content="Lucas Vinze">
 
   
-  <meta name="description" content="Graph? body { font: 10px sans-serif;
-} .axis path,
-.axis line { fill: none; stroke: #000; shape-rendering: crispEdges;
-} .area { fill: steelblue &hellip;">
+  <meta name="description" content="Problem: Adding scalable vector images (svg) files within the octopress blogging framework. This is a prerequisite to usign the D3 javascript &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -100,7 +97,35 @@
 
 <p></p>
 
-<p>Graph?</p>
+<p><em>Problem:</em> Adding scalable vector images (svg) files within the octopress blogging framework. This is a prerequisite to usign the D3 javascript library that allows to build powerful visualization and data-driven pages.</p>
+
+<p><svg width="300" height="100">
+<rect x="0" y="0" width="500" height="50"/>
+</svg></p>
+
+<p><svg width="300" height="100">
+<circle cx="250" cy="25" r="25"/>
+<line x1="100" y1 = "70" x2 ="300" y2 = "100" stroke="black"/></p>
+
+<p><text x="250" y="25" font-family="serif" font-size="25" fill="grey"> Easy Does it</text>
+</svg></p>
+
+<script type="text/javascript">
+
+  var data = "assets/data/data.tsv"
+
+  var margin = {top: 40, right: 40, bottom: 40, left: 40},
+      width = $('.entry-content').width(),
+      height = 300;
+
+  $(window).resize(function() {
+    width = $('.entry-content').width();
+  });
+
+</script>
+
+
+
 
 <div>
   <style type="text/css">
@@ -127,7 +152,7 @@ body {
 
 
 
-<div id='chart-1'></div>
+<div id='chart-2'></div>
 
 
 
@@ -137,7 +162,7 @@ body {
 
   function draw() {
 
-    $('#chart-1').empty();
+    $('#chart-2').empty();
 
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
@@ -164,13 +189,13 @@ var area = d3.svg.area()
     .y0(height)
     .y1(function(d) { return y(d.close); });
 
-var svg = d3.select("#chart-1'").append("svg")
+var svg = d3.select('#chart-2).append('svg')
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.tsv("assets/data/data.tsv", function(error, data) {
+d3.tsv(data, function(error, data) {
   data.forEach(function(d) {
     d.date = parseDate(d.date);
     d.close = +d.close;
