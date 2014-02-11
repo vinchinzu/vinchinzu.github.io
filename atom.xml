@@ -4,7 +4,7 @@
   <title><![CDATA[Streaming Longitude]]></title>
   <link href="http://vinchinzu.github.io/atom.xml" rel="self"/>
   <link href="http://vinchinzu.github.io/"/>
-  <updated>2014-02-11T10:27:13-06:00</updated>
+  <updated>2014-02-11T10:34:14-06:00</updated>
   <id>http://vinchinzu.github.io/</id>
   <author>
     <name><![CDATA[Lucas Vinze]]></name>
@@ -25,40 +25,9 @@
 
 <p><em>Problem:</em> Adding scalable vector images (svg) files within the octopress blogging framework. This is a prerequisite to usign the D3 javascript library that allows to build powerful visualization and data-driven pages.</p>
 
-<p><svg width="300" height="100">
-<rect x="0" y="0" width="500" height="50"/>
-</svg></p>
-
-<p><svg width="300" height="100">
-<circle cx="250" cy="25" r="25"/>
-<line x1="100" y1 = "70" x2 ="300" y2 = "100" stroke="black"/></p>
-
-<p><text x="250" y="25" font-family="serif" font-size="25" fill="grey"> Easy Does it</text>
-</svg></p>
-
-<script type="text/javascript">
-
-  var data = "assets/data/data.tsv"
-
-  var margin = {top: 40, right: 40, bottom: 40, left: 40},
-      width = $('.entry-content').width(),
-      height = 300;
-
-  $(window).resize(function() {
-    width = $('.entry-content').width();
-  });
-
-</script>
-
-
-
-
 <div>
   <style type="text/css">
 
-body {
-  font: 10px sans-serif;
-}
 
 .axis path,
 .axis line {
@@ -81,85 +50,6 @@ body {
 <div id='chart-2'></div>
 
 
-
-
-<script type='text/javascript'>
-(function() {
-
-  function draw() {
-
-    $('#chart-2').empty();
-
-  var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
-
-var parseDate = d3.time.format("%d-%b-%y").parse;
-
-var x = d3.time.scale()
-    .range([0, width]);
-
-var y = d3.scale.linear()
-    .range([height, 0]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
-
-var area = d3.svg.area()
-    .x(function(d) { return x(d.date); })
-    .y0(height)
-    .y1(function(d) { return y(d.close); });
-
-var svg = d3.select('#chart-2).append('svg')
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-d3.tsv(data, function(error, data) {
-  data.forEach(function(d) {
-    d.date = parseDate(d.date);
-    d.close = +d.close;
-  });
-
-  x.domain(d3.extent(data, function(d) { return d.date; }));
-  y.domain([0, d3.max(data, function(d) { return d.close; })]);
-
-  svg.append("path")
-      .datum(data)
-      .attr("class", "area")
-      .attr("d", area);
-
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Price ($)");
-
-  }
-
-  draw();
-
-  $(window).resize(function() {
-    draw();
-  });
-
-})();
-</script>
 
 ]]></content>
   </entry>
@@ -279,155 +169,6 @@ $(function() {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[D3 Map Tiles]]></title>
-    <link href="http://vinchinzu.github.io/blog/2014/02/10/d3-map-tiles/"/>
-    <updated>2014-02-10T12:23:56-06:00</updated>
-    <id>http://vinchinzu.github.io/blog/2014/02/10/d3-map-tiles</id>
-    <content type="html"><![CDATA[<script src="http://d3js.org/d3.v2.js"></script>
-
-
-<p></p>
-
-<script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
-
-
-
-
-<div>
-  <style type="text/css">
-
- .map {
-  position: relative;
-  overflow: hidden;
-}
-
-.layer {
-  position: absolute;
-}
-
-.tile {
-  pointer-events: none;
-  position: absolute;
-  width: 256px;
-  height: 256px;
-}
-
-.info {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-}
-
-  </style>
-</div>
-
-
-
-
-<script type="text/javascript">
-
-  var margin = {top: 40, right: 40, bottom: 40, left: 40},
-      width = $('.entry-content').width(),
-      height = 300;
-
-  $(window).resize(function() {
-    width = $('.entry-content').width();
-  });
-
-</script>
-
-
-
-
-<div id='chart-1'></div>
-
-
-
-
-<script>
-
-var width = Math.max(960, window.innerWidth),
-    height = Math.max(500, window.innerHeight),
-    prefix = prefixMatch(["webkit", "ms", "Moz", "O"]);
-
-var tile = d3.geo.tile()
-    .size([width, height]);
-
-var projection = d3.geo.mercator();
-
-var zoom = d3.behavior.zoom()
-    .scale(1 << 12)
-    .scaleExtent([1 << 9, 1 << 23])
-    .translate([width / 2, height / 2])
-    .on("zoom", zoomed);
-
-var map = d3.select("chart-1").append("div")
-    .attr("class", "map")
-    .style("width", width + "px")
-    .style("height", height + "px")
-    .call(zoom)
-    .on("mousemove", mousemoved);
-
-var layer = map.append("div")
-    .attr("class", "layer");
-
-var info = map.append("div")
-    .attr("class", "info");
-
-zoomed();
-
-function zoomed() {
-  var tiles = tile
-      .scale(zoom.scale())
-      .translate(zoom.translate())
-      ();
-
-  projection
-      .scale(zoom.scale() / 2 / Math.PI)
-      .translate(zoom.translate());
-
-  var image = layer
-      .style(prefix + "transform", matrix3d(tiles.scale, tiles.translate))
-    .selectAll(".tile")
-      .data(tiles, function(d) { return d; });
-
-  image.exit()
-      .remove();
-
-  image.enter().append("img")
-      .attr("class", "tile")
-      .attr("src", function(d) { return "http://" + ["a", "b", "c", "d"][Math.random() * 4 | 0] + ".tiles.mapbox.com/v3/examples.map-vyofok3q/" + d[2] + "/" + d[0] + "/" + d[1] + ".png"; })
-      .style("left", function(d) { return (d[0] << 8) + "px"; })
-      .style("top", function(d) { return (d[1] << 8) + "px"; });
-}
-
-function mousemoved() {
-  info.text(formatLocation(projection.invert(d3.mouse(this)), zoom.scale()));
-}
-
-function matrix3d(scale, translate) {
-  var k = scale / 256, r = scale % 1 ? Number : Math.round;
-  return "matrix3d(" + [k, 0, 0, 0, 0, k, 0, 0, 0, 0, k, 0, r(translate[0] * scale), r(translate[1] * scale), 0, 1 ] + ")";
-}
-
-function prefixMatch(p) {
-  var i = -1, n = p.length, s = document.body.style;
-  while (++i < n) if (p[i] + "Transform" in s) return "-" + p[i].toLowerCase() + "-";
-  return "";
-}
-
-function formatLocation(p, k) {
-  var format = d3.format("." + Math.floor(Math.log(k) / 2 - 2) + "f");
-  return (p[1] < 0 ? format(-p[1]) + "°S" : format(p[1]) + "°N") + " "
-       + (p[0] < 0 ? format(-p[0]) + "°W" : format(p[0]) + "°E");
-}
-
-</script>
-
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Posting With D3 Graphics]]></title>
     <link href="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript/"/>
     <updated>2014-02-10T11:45:37-06:00</updated>
@@ -447,7 +188,7 @@ function formatLocation(p, k) {
 <pre><code class='html'>&lt;script src=&quot;<a href="http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;">http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;</a></code></pre>
 </div></p></li>
 <li><p>Adjusting the margins and container sizes</p></li>
-<li>add a div with ID to hold the graph</li>
+<li>Add    a div with ID to hold the graph</li>
 </ul>
 
 
