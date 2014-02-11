@@ -12,28 +12,47 @@ categories:
 
 
 
-
-
 <div>
   <style type="text/css">
 
+    .chart {
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      margin-top: -40px;
+    }
 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
+    .bar {
+      fill: steelblue;
+    }
 
-.area {
-  fill: steelblue;
-}
-
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
 
   </style>
 </div>
 
+<script type="text/javascript">
+
+  var data = [6, 1, 2, 3, 5, 4,8];
+
+  var margin = {top: 40, right: 40, bottom: 40, left: 40},
+      width = $('.entry-content').width(),
+      height = 300;
+
+  $(window).resize(function() {
+    width = $('.entry-content').width();
+  });
+
+</script>
 
 
-<div id='chart-2'></div>
+
+<div id='test-1'></div>
+
+<script type="text/javascript">
+  d3.select("#test-1").append("p").text("New paragraph!");
+</script>
 
