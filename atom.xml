@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Streaming Longitude]]></title>
+  <link href="http://vinchinzu.github.io/atom.xml" rel="self"/>
+  <link href="http://vinchinzu.github.io/"/>
+  <updated>2014-02-11T19:28:08-06:00</updated>
+  <id>http://vinchinzu.github.io/</id>
+  <author>
+    <name><![CDATA[Lucas Vinze]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Js D3 Test]]></title>
+    <link href="http://vinchinzu.github.io/blog/2014/02/10/js-d3-test/"/>
+    <updated>2014-02-10T14:31:48-06:00</updated>
+    <id>http://vinchinzu.github.io/blog/2014/02/10/js-d3-test</id>
+    <content type="html"><![CDATA[<script src="http://d3js.org/d3.v2.js"></script>
+
+
+<p></p>
+
+<p><em>Problem:</em> Adding scalable vector images (svg) files within the octopress blogging framework. This is a prerequisite to usign the D3 javascript library that allows to build powerful visualization and data-driven pages.</p>
+
+<div>
+  <style type="text/css">
+
+    .chart {
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      margin-top: -40px;
+    }
+
+    .bar {
+      fill: steelblue;
+    }
+
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+  </style>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+  var data = [6, 1, 2, 3, 5, 4,8];
+
+  var margin = {top: 40, right: 40, bottom: 40, left: 40},
+      width = $('.entry-content').width(),
+      height = 300;
+
+  $(window).resize(function() {
+    width = $('.entry-content').width();
+  });
+
+</script>
+
+
+
+
+<div id='test-1'></div>
+
+
+
+
+<script type="text/javascript">
+  d3.select("#test-1").append("p").text("New paragraph!");
+</script>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[HighCharts]]></title>
+    <link href="http://vinchinzu.github.io/blog/2014/02/10/highcharts/"/>
+    <updated>2014-02-10T12:58:18-06:00</updated>
+    <id>http://vinchinzu.github.io/blog/2014/02/10/highcharts</id>
+    <content type="html"><![CDATA[<script src="http://code.highcharts.com/stock/highstock.js"></script>
+
+
+<script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+
+
+<p>Methods for adding highcharts graphics into Octopress posts.</p>
+
+<ul>
+<li>Found from tutorial <a href="http://www.alexpotrykus.com/blog/2013/11/21/using-highcharts-and-highstocks-with-octopress/">here</a></li>
+<li>Trick is to add Javascript library to source, and add link on post</li>
+<li>Also add id &lsquo;container&rsquo; to render to.</li>
+</ul>
+
+
+<div id="container" style="height: 500px; min-width: 500px"></div>
+
+
+
+
+<script>
+
+$(function() {
+    $.getJSON('http://www.highcharts.com/samples/data/jsonp.php?filename=aapl-ohlcv.json&callback=?', function(data) {
+
+        // split the data set into ohlc and volume
+        var ohlc = [],
+            volume = [],
+            dataLength = data.length;
+            
+        for (i = 0; i < dataLength; i++) {
+            ohlc.push([
+                data[i][0], // the date
+                data[i][1], // open
+                data[i][2], // high
+                data[i][3], // low
+                data[i][4] // close
+            ]);
+            
+            volume.push([
+                data[i][0], // the date
+                data[i][5] // the volume
+            ])
+        }
+
+        // set the allowed units for data grouping
+        var groupingUnits = [[
+            'week',                         // unit name
+            [1]                             // allowed multiples
+        ], [
+            'month',
+            [1, 2, 3, 4, 6]
+        ]];
+
+        // create the chart
+        $('#container').highcharts('StockChart', {
+            
+            rangeSelector: {
+                selected: 1
+            },
+
+            title: {
+                text: 'AAPL Historical'
+            },
+
+            yAxis: [{
+                title: {
+                    text: 'OHLC'
+                },
+                height: 200,
+                lineWidth: 2
+            }, {
+                title: {
+                    text: 'Volume'
+                },
+                top: 300,
+                height: 100,
+                offset: 0,
+                lineWidth: 2
+            }],
+            
+            series: [{
+                type: 'candlestick',
+                name: 'AAPL',
+                data: ohlc,
+                dataGrouping: {
+                    units: groupingUnits
+                }
+            }, {
+                type: 'column',
+                name: 'Volume',
+                data: volume,
+                yAxis: 1,
+                dataGrouping: {
+                    units: groupingUnits
+                }
+            }]
+        });
+    });
+});
+
+
+</script>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Posting With D3 Graphics]]></title>
+    <link href="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript/"/>
+    <updated>2014-02-10T11:45:37-06:00</updated>
+    <id>http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript</id>
+    <content type="html"><![CDATA[<script src="http://d3js.org/d3.v2.js"></script>
+
+
+<p></p>
+
+<h2>See what can be done with Javascript:</h2>
+
+<p>I wanted to add dynamic graphs on the static build with Jekyll and Octopress, and still be able to push directly from the terminal line. This seems like a decent solution to start with. The trick is:</p>
+
+<ul>
+<li>adding the style tags in a div at the top</li>
+<li><p>adding the javascript source to d3 at the top of the post  <div>
+<pre><code class='html'>&lt;script src=&quot;<a href="http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;">http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;</a></code></pre>
+</div></p></li>
+<li><p>Adjusting the margins and container sizes</p></li>
+<li>Add    a div with ID to hold the graph</li>
+</ul>
+
+
+<p>Start with d3 library: with this tutorial <a href="http://robdodson.me/blog/2012/05/02/d3-js-and-octopress/">here</a></p>
+
+<div>
+  <style type="text/css">
+
+    .chart {
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      margin-top: -40px;
+    }
+
+    .bar {
+      fill: steelblue;
+    }
+
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+  </style>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+  var data = [6, 1, 2, 3, 5, 4,8];
+
+  var margin = {top: 40, right: 40, bottom: 40, left: 40},
+      width = $('.entry-content').width(),
+      height = 300;
+
+  $(window).resize(function() {
+    width = $('.entry-content').width();
+  });
+
+</script>
+
+
+
+
+<!-- D3.js Chart -->
+
+
+
+
+<div id='chart-1'></div>
+
+
+
+
+<script type='text/javascript'>
+(function() {
+
+  function draw() {
+
+    $('#chart-1').empty();
+
+    var x = d3.scale.linear()
+        .domain([0, d3.max(data)])
+        .range([0, width - margin.left - margin.right]);
+
+    var y = d3.scale.ordinal()
+        .domain(d3.range(data.length))
+        .rangeRoundBands([height - margin.top - margin.bottom, 0], 0.2);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient('bottom')
+        .tickPadding(8);
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient('left')
+        .tickPadding(8)
+        .tickSize(0);
+
+    var svg = d3.select('#chart-1').append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('class', 'chart')
+      .append('g')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+    svg.selectAll('.chart')
+        .data(data)
+        .enter().append('rect')
+        .attr('class', 'bar')
+        .attr('y', function(d, i) { return y(i) })
+        .attr('width', x)
+        .attr('height', y.rangeBand());
+
+    svg.append('g')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0, ' + y.rangeExtent()[1] + ')')
+        .call(xAxis);
+
+    svg.append('g')
+        .attr('class', 'y axis')
+        .call(yAxis)
+      .selectAll('text')
+        .text(function(d) { return String.fromCharCode(d + 65); });
+
+  }
+
+  draw();
+
+  $(window).resize(function() {
+    draw();
+  });
+
+})();
+</script>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[World Beer Trade]]></title>
+    <link href="http://vinchinzu.github.io/blog/2014/02/10/world-beer-trade/"/>
+    <updated>2014-02-10T10:51:57-06:00</updated>
+    <id>http://vinchinzu.github.io/blog/2014/02/10/world-beer-trade</id>
+    <content type="html"><![CDATA[<p><em>Problem:</em> Finding a good way to visually analyze world trade data. The UN Comtrade website has a great interfacte to download current data (2010-Present) from most countries. However, how can we make sense of thousands of lines of data from a top down view.</p>
+
+<p><em>Solution:</em> Using the R statistical programming language, it is easy to condense this data into a network graph that shows the density of trade between nations and the linkages for different producucts.
+An outline is found <a href="blog/2014/02/05/trade-network-graphs/">here</a>
+As an examples, I have downloaded January 2013 data for Beer (<a href="http://hts.usitc.gov/">HTS code</a>: 2203) he graph below shows a network graph of international trade between nations for Beer.</p>
+
+<p>Primary Analysis:   Use the PDF to zoom in. (I am working on a pin point</p>
+
+<ol>
+<li>The trade is limited to the top 80% of interactions so that the smaller countries do not clutter up the image.</li>
+<li>It is immediately apparent the regional clusterign due to geographic proximity.</li>
+<li>Note that the Netherlands is the center of the beer export world (Heineken and Inbev)</li>
+<li>The biggest line on the graph is exports from Mexico to the US</li>
+</ol>
+
+
+<p><img src="http://vinchinzu.github.io/figs/2014-02-10-world-beer-trade/tradeplot.png" alt="center" /></p>
+
+<p><a href="http://vinchinzu.github.io/figs/2014-02-10-world-beer-trade/pdfplot.pdf">pdf download</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Chinese the New Lingua Franca]]></title>
+    <link href="http://vinchinzu.github.io/blog/2014/02/10/chinese-the-new-lingua-franca/"/>
+    <updated>2014-02-10T10:14:57-06:00</updated>
+    <id>http://vinchinzu.github.io/blog/2014/02/10/chinese-the-new-lingua-franca</id>
+    <content type="html"><![CDATA[<p><meta http-equiv='Content-Type' content='text/html; charset=utf-8' /></p>
+
+<h2>Is Chinese the Future Lingua Franca?</h2>
+
+<p>by Lucas Vinze</p>
+
+<p>I wrote this article in 2011 while working on my masters degree from Texas A&amp;M. I was studying at the Shanghai Institute of International Studies in Shanghai, China. The original work was written for the US Department of State&rsquo;s Virtual Internship program.</p>
+
+<p>作者卢卡斯是德州农工大学布什学院硕士，上海国际问题研究院
+留学生，明年五月毕业于国际政治经济学专业。</p>
+
+<p>中文会是未来的全球语言吗？</p>
+
+<p>我刚来到上海学国际关系。 我跟我的中国同学和朋友就只能说一点点中文，而且只是像表达基本的想法之类的很简单的中文。
+最近， 我认识了一位哈萨克斯坦的朋友， 他是地区安全研究员。 他也可以说四门语言，但是他不会说英文所以 我们只能用汉语交流。</p>
+
+<p>我们都不是以汉语为母语的人， 可是我们可以交流的很好。</p>
+
+<p>随着中国经济的快速发展，我感觉到将来中国和普通话可能会对周边国家产生重要的影响。
+那时候中国将发展到很高的水平，中国人会在全球范围内产生更多的参与性。那些能为中国从事跨境旅游和商业活动服务的国家将会从中获利。</p>
+
+<p>将来外国的学生或者商人如果想更好的和中国人展开商业活动，他们必须学习更多的中文。 英语在全球商业活动中的主导地位将受到汉语的挑战。</p>
+
+<p>有些非英语国家的人不能很好地理解我说的英语，所以我也需要把英文看作是一门国际化语言，试着说更多容易让别人理解的英语，而不是只有英语国家的人才懂的俚语和方言。</p>
+
+<p>我的中文翻译只是一个概要， 我的中文还不足以清晰的表达自己的观点。 请阅读英文以更好地了解我的观点。</p>
+
+<p>I recently arrived in Shanghai to study at international affairs and economics at the Shanghai Institute of International Studies SIIS.  During the last few months in Shanghai, I&rsquo;ve discovered a new use for my burgeoning Chinese language skills. In the past, the only time that I spoke Chinese was to native Chinese speakers in somewhat limited exchanges such as explaining basic ideas to classmates or narrating simple stories or daily events.
+ 
+Recently, however, I have become friends with another visiting fellow here at SIIS. We share a tiny corner office, live on the same floor of the hotel, and have the mutually bonding experience of being a Lao Wai (foreigner) in China. Being from Kazakhstan, my friend only speaks Russian, Kazakh, Uyghur and Chinese. With a few languages under my belt, I can usually get around, but given that he spoke no English or the other languages I have studied, Chinese became our common language.
+ 
+Given that he is a scholar on regional security studies, he was capable of writing Chinese articles and giving lengthy discourses, but his spoken lexicon is simple enough that I could understand everything he said within a day or two. I&rsquo;m now reaching an intermediate level of Chinese with about 1000 characters and maybe 300-500 classroom hours.  I&rsquo;m starting to appreciate how difficult an endeavor it is to advance and how far I still am from reading a newspaper or having a discussion on anything of importance.
+ 
+So, speaking Chinese with my Kazakh friend has been excellent language practice, but the exchange also brought to mind the interesting concept of what the world would look like with Chinese as a lingua franca. While I believe English has a firm foothold as a global language, despite the difficulty of learning the language, I believe Chinese will definitely spread more rapidly than many predict.
+ 
+Soon China will spread its influence to neighboring countries and continents as the population of 1.3 billion Chinese have higher per capita incomes and increased mobility. Record numbers of Chinese are visiting the United States despite our cultural and geographic distances. Countries that cater to Chinese tourists will benefit from China&rsquo;s growing  economic might.</p>
+
+<p>Soon China will spread its influence to neighboring countries and continents as the population of 1.3 billion Chinese have higher per capita incomes and increased mobility. Record numbers of Chinese are visiting the United States despite our cultural and geographic distances. Countries that cater to Chinese tourists will benefit from China&rsquo;s growing  economic might.
+ 
+As Chinese multinational companies grow and develop competitive advantages on a global scale, perhaps that aspiring young manager from the United States or Brazil will need a high capacity in Mandarin to close the all-important business deal. Citizens of countries that are the recipients of Chinese investments will surely see a surge in the demand to understand and speak Mandarin Chinese.
+ 
+Given these simple observations, I have two take-aways.</p>
+
+<ol>
+<li>The dominant position of the English language as an international medium should not be taken for granted.  At the least, Chinese will join English as an international business language. Future American business people, diplomats, and scholars may be at a disadvantage in the global marketplace if they can&rsquo;t speak Mandarin.
+ </li>
+<li>I&rsquo;ve realized that I also need to think about English as an international language and use it that way rather than just speaking at my regular pace with slang and idioms when speaking to non-native English speakers.  I have realized my own English is not that easy to understand for many non-native speakers and have decided it might not hurt to take a speech course in International English or teaching English as a second language.</li>
+</ol>
+
+
+<p>Lucas Vinze is currently an exchange student at Shanghai Institute of International Studies, a Chinese international relations think tank. He is completing a Masters of International Affairs and Economics at the Bush School of Government and Public Service at Texas A&amp;M University. </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Trade Network Graphs]]></title>
+    <link href="http://vinchinzu.github.io/blog/2014/02/05/trade-network-graphs/"/>
+    <updated>2014-02-05T00:00:00-06:00</updated>
+    <id>http://vinchinzu.github.io/blog/2014/02/05/trade-network-graphs</id>
+    <content type="html"><![CDATA[<h3>Step 1</h3>
+
+<p>Gather data from UN Comtrade.
+  1. Choose your</p>
+
+<p><a href="http://comtrade.un.org/monthly/Main/Data.aspx">here</a>
+Create a log-in and account
+This allows downloads of 5000 lines each, so each query has to be small enough to account for this.
+Design the query based on exporter, importer, commodity (ies), period, and trade flow (import/export).
+Search for the appropriate HTS codes for the commodity classification.</p>
+
+<h3>Step 2</h3>
+
+<p>Open the R Console and process the source file:</p>
+
+<p>This script will directly process the csv file downloaded from Comtrade.</p>
+
+<p>Change the query file as needed.</p>
+
+<div>
+  <pre><code class='r'>library(network)
+library(plyr)
+
+# setwd(&quot;./Downloads&quot;)
+
+df = read.csv(&quot;QueryResults (34).csv&quot;, header = TRUE,
+                   stringsAsFactors = FALSE)
+
+## Take only the trade
+
+Ex.df = subset(df,subset = TradeFlowDescription == &quot;Exports&quot;, 
+                   c(&quot;ReporterDescription&quot;, &quot;PartnerDescription&quot;, &quot;Value&quot;))
+Ex.df &lt;- Ex.df[!Ex.df$PartnerDescription == &quot;World&quot;,]
+Ex.df &lt;- Ex.df[!Ex.df$ReporterDescription == &quot;EU-27&quot;,]
+
+Ex.df$Value &lt;- Ex.df$Value/1000
+
+## Sort the data and take only the top 80% of the trade
+Ex.df = arrange(Ex.df, desc(Value))
+
+Ex.df$sWine = scale(Ex.df$Value, center = FALSE)
+Ex.df$cs = cumsum(as.numeric(Ex.df$Value))
+Ex.df[Ex.df[, 1] == &quot;China, Hong Kong SAR &quot;, 1] = &quot;China, Hong Kong SAR&quot;
+
+## Adjust Top Percentage to be included
+Final.df = subset(Ex.df, cs &lt; tail(Ex.df$cs, 1) * 0.9)
+
+## Set edge and arrow size
+Final.df$edgeSize = with(Final.df, Value/sum(Value))
+Final.df$arrowSize = ifelse(Final.df$edgeSize * 30 &lt; 0.5 , 0.5,
+                                Final.df$edgeSize * 15)
+
+## Create the network and plot
+net = network(Final.df[, 1:2])
+plot(net, displaylabels = TRUE, label.col = &quot;steelblue&quot;,
+     edge.lwd = c(Final.df$edgeSize) * 100,
+     arrowhead.cex = c(Final.df$arrowSize),
+     label.cex = 0.5, vertex.border = &quot;white&quot;,
+     vertex.col = &quot;skyblue&quot;, edge.col = rgb(0, 0, 0, alpha = 0.5))
+
+
+
+
+
+pdf(file='pdfplot')
+plot(net, displaylabels = TRUE, label.col = &quot;steelblue&quot;,
+     edge.lwd = c(Final.df$edgeSize) * 100,
+     arrowhead.cex = c(Final.df$arrowSize),
+     label.cex = 0.5, vertex.border = &quot;white&quot;,
+     vertex.col = &quot;skyblue&quot;, edge.col = rgb(0, 0, 0, alpha = 0.5))
+dev.off()</code></pre>
+</div>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Blog With Knitr and Jekyll]]></title>
+    <link href="http://vinchinzu.github.io/blog/2012/07/03/knitr-jekyll/"/>
+    <updated>2012-07-03T00:00:00-05:00</updated>
+    <id>http://vinchinzu.github.io/blog/2012/07/03/knitr-jekyll</id>
+    <content type="html"><![CDATA[<p>The <a href="http://yihui.name/knitr/">knitr</a> package provides an easy way to embed
+<a href="http://www.r-project.org/">R</a> code in a <a href="http://jekyllbootstrap.com/">Jekyll-Bootstrap</a>
+blog post. The only required input is an <strong>R Markdown</strong> source file.
+The name of the source file used to generate this post is <em>2012-07-03-knitr-jekyll.Rmd</em>, available
+<a href="https://github.com/jfisher-usgs/jfisher-usgs.github.com/blob/master/Rmd/2012-07-03-knitr-jekyll.Rmd">here</a>.
+Steps taken to build this post are as follows:</p>
+
+<h3>Step 1</h3>
+
+<p>Create a Jekyll-Boostrap blog if you don&rsquo;t already have one.
+A brief tutorial on building this blog is available
+<a href="http://vinchinzu.github.io/lessons/2012/05/30/jekyll-build-on-windows/">here</a>.</p>
+
+<h3>Step 2</h3>
+
+<p>Open the R Console and process the source file:</p>
+
+<div>
+  <pre><code class='r'>KnitPost &lt;- function(input, base.url = &quot;/&quot;) {
+    require(knitr)
+    opts_knit$set(base.url = base.url)
+    fig.path &lt;- paste0(&quot;figs/&quot;, sub(&quot;.Rmd$&quot;, &quot;&quot;, basename(input)), &quot;/&quot;)
+    opts_chunk$set(fig.path = fig.path)
+    opts_chunk$set(fig.cap = &quot;center&quot;)
+    render_jekyll()
+    knit(input, envir = parent.frame())
+}
+KnitPost(&quot;2012-07-03-knitr-jekyll.Rmd&quot;)</code></pre>
+</div>
+
+
+<h3>Step 3</h3>
+
+<p>Move the resulting image folder <em>2012-07-03-knitr-jekyll</em> and <strong>Markdown</strong> file
+<em>2012-07-03-knitr-jekyll.md</em> to the local
+<em>jfisher-usgs.github.com</em> <a href="http://git-scm.com/">git</a> repository.
+The KnitPost function assumes that the image folder will be placed in a
+<a href="https://github.com/jfisher-usgs/jfisher-usgs.github.com/tree/master/figs">figs</a>
+folder located at the root of the repository.</p>
+
+<h3>Step 4</h3>
+
+<p>Add the following CSS code to the
+<em>/assets/themes/twitter-2.0/css/bootstrap.min.css</em> file to center images:</p>
+
+<pre><code>[alt=center] {
+  display: block;
+  margin: auto;
+}
+</code></pre>
+
+<p>That&rsquo;s it.</p>
+
+<hr />
+
+<p>Here are a few examples of embedding R code:</p>
+
+<div>
+  <pre><code class='r'>summary(cars)</code></pre>
+</div>
+
+
+
+
+<div>
+  <pre><code class='text'>##      speed           dist    
+##  Min.   : 4.0   Min.   :  2  
+##  1st Qu.:12.0   1st Qu.: 26  
+##  Median :15.0   Median : 36  
+##  Mean   :15.4   Mean   : 43  
+##  3rd Qu.:19.0   3rd Qu.: 56  
+##  Max.   :25.0   Max.   :120</code></pre>
+</div>
+
+
+
+
+<div>
+  <pre><code class='r'>par(mar = c(4, 4, 0.1, 0.1), omi = c(0, 0, 0, 0))
+plot(cars)</code></pre>
+</div>
+
+
+<p><img src="http://vinchinzu.github.io/figs/2012-07-03-knitr-jekyll/fig1.png" alt="center" /></p>
+
+<h5>Figure 1: Caption</h5>
+
+<div>
+  <pre><code class='r'>par(mar = c(2.5, 2.5, 0.5, 0.1), omi = c(0, 0, 0, 0))
+filled.contour(volcano)</code></pre>
+</div>
+
+
+<p><img src="http://vinchinzu.github.io/figs/2012-07-03-knitr-jekyll/fig2.png" alt="center" /></p>
+
+<h5>Figure 2: Caption</h5>
+
+<p>And don&rsquo;t forget your session information for proper reproducible research.</p>
+
+<div>
+  <pre><code class='r'>sessionInfo()</code></pre>
+</div>
+
+
+
+
+<div>
+  <pre><code class='text'>## R version 3.0.2 (2013-09-25)
+## Platform: i386-w64-mingw32/i386 (32-bit)
+## 
+## locale:
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] knitr_1.5
+## 
+## loaded via a namespace (and not attached):
+## [1] evaluate_0.5.1 formatR_0.10   stringr_0.6.2  tools_3.0.2</code></pre>
+</div>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

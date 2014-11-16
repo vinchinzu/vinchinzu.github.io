@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: R | Streaming Longitude]]></title>
+  <link href="http://vinchinzu.github.io/blog/categories/r/atom.xml" rel="self"/>
+  <link href="http://vinchinzu.github.io/"/>
+  <updated>2014-02-11T19:28:08-06:00</updated>
+  <id>http://vinchinzu.github.io/</id>
+  <author>
+    <name><![CDATA[Lucas Vinze]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Trade Network Graphs]]></title>
+    <link href="http://vinchinzu.github.io/blog/2014/02/05/trade-network-graphs/"/>
+    <updated>2014-02-05T00:00:00-06:00</updated>
+    <id>http://vinchinzu.github.io/blog/2014/02/05/trade-network-graphs</id>
+    <content type="html"><![CDATA[<h3>Step 1</h3>
+
+<p>Gather data from UN Comtrade.
+  1. Choose your</p>
+
+<p><a href="http://comtrade.un.org/monthly/Main/Data.aspx">here</a>
+Create a log-in and account
+This allows downloads of 5000 lines each, so each query has to be small enough to account for this.
+Design the query based on exporter, importer, commodity (ies), period, and trade flow (import/export).
+Search for the appropriate HTS codes for the commodity classification.</p>
+
+<h3>Step 2</h3>
+
+<p>Open the R Console and process the source file:</p>
+
+<p>This script will directly process the csv file downloaded from Comtrade.</p>
+
+<p>Change the query file as needed.</p>
+
+<p><div>
+  <pre><code class='r'>library(network)
+library(plyr)&lt;/p&gt;
+
+&lt;h1&gt;setwd(&amp;ldquo;./Downloads&amp;rdquo;)&lt;/h1&gt;
+
+&lt;p&gt;df = read.csv(&amp;ldquo;QueryResults (34).csv&amp;rdquo;, header = TRUE,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;               stringsAsFactors = FALSE)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Take only the trade&lt;/h2&gt;
+
+&lt;p&gt;Ex.df = subset(df,subset = TradeFlowDescription == &amp;ldquo;Exports&amp;rdquo;,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;               c(&quot;ReporterDescription&quot;, &quot;PartnerDescription&quot;, &quot;Value&quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ex.df &amp;lt;&amp;ndash; Ex.df[!Ex.df$PartnerDescription == &amp;ldquo;World&amp;rdquo;,]
+Ex.df &amp;lt;&amp;ndash; Ex.df[!Ex.df$ReporterDescription == &amp;ldquo;EU-27&amp;rdquo;,]&lt;/p&gt;
+
+&lt;p&gt;Ex.df$Value &amp;lt;&amp;ndash; Ex.df$Value/1000&lt;/p&gt;
+
+&lt;h2&gt;Sort the data and take only the top 80% of the trade&lt;/h2&gt;
+
+&lt;p&gt;Ex.df = arrange(Ex.df, desc(Value))&lt;/p&gt;
+
+&lt;p&gt;Ex.df$sWine = scale(Ex.df$Value, center = FALSE)
+Ex.df$cs = cumsum(as.numeric(Ex.df$Value))
+Ex.df[Ex.df[, 1] == &amp;ldquo;China, Hong Kong SAR &amp;rdquo;, 1] = &amp;ldquo;China, Hong Kong SAR&amp;rdquo;&lt;/p&gt;
+
+&lt;h2&gt;Adjust Top Percentage to be included&lt;/h2&gt;
+
+&lt;p&gt;Final.df = subset(Ex.df, cs &amp;lt; tail(Ex.df$cs, 1) * 0.9)&lt;/p&gt;
+
+&lt;h2&gt;Set edge and arrow size&lt;/h2&gt;
+
+&lt;p&gt;Final.df$edgeSize = with(Final.df, Value/sum(Value))
+Final.df$arrowSize = ifelse(Final.df$edgeSize * 30 &amp;lt; 0.5 , 0.5,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;                            Final.df$edgeSize * 15)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Create the network and plot&lt;/h2&gt;
+
+&lt;p&gt;net = network(Final.df[, 1:2])
+plot(net, displaylabels = TRUE, label.col = &amp;ldquo;steelblue&amp;rdquo;,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; edge.lwd = c(Final.df$edgeSize) * 100,
+ arrowhead.cex = c(Final.df$arrowSize),
+ label.cex = 0.5, vertex.border = &quot;white&quot;,
+ vertex.col = &quot;skyblue&quot;, edge.col = rgb(0, 0, 0, alpha = 0.5))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;pdf(file=&amp;lsquo;pdfplot&amp;rsquo;)
+plot(net, displaylabels = TRUE, label.col = &amp;ldquo;steelblue&amp;rdquo;,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; edge.lwd = c(Final.df$edgeSize) * 100,
+ arrowhead.cex = c(Final.df$arrowSize),
+ label.cex = 0.5, vertex.border = &quot;white&quot;,
+ vertex.col = &quot;skyblue&quot;, edge.col = rgb(0, 0, 0, alpha = 0.5))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;dev.off()&lt;/p&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Blog With Knitr and Jekyll]]></title>
+    <link href="http://vinchinzu.github.io/blog/2012/07/03/knitr-jekyll/"/>
+    <updated>2012-07-03T00:00:00-05:00</updated>
+    <id>http://vinchinzu.github.io/blog/2012/07/03/knitr-jekyll</id>
+    <content type="html"><![CDATA[<p>The <a href="http://yihui.name/knitr/">knitr</a> package provides an easy way to embed
+<a href="http://www.r-project.org/">R</a> code in a <a href="http://jekyllbootstrap.com/">Jekyll-Bootstrap</a>
+blog post. The only required input is an <strong>R Markdown</strong> source file.
+The name of the source file used to generate this post is <em>2012-07-03-knitr-jekyll.Rmd</em>, available
+<a href="https://github.com/jfisher-usgs/jfisher-usgs.github.com/blob/master/Rmd/2012-07-03-knitr-jekyll.Rmd">here</a>.
+Steps taken to build this post are as follows:</p>
+
+<h3>Step 1</h3>
+
+<p>Create a Jekyll-Boostrap blog if you don&rsquo;t already have one.
+A brief tutorial on building this blog is available
+<a href="/lessons/2012/05/30/jekyll-build-on-windows/">here</a>.</p>
+
+<h3>Step 2</h3>
+
+<p>Open the R Console and process the source file:</p>
+
+<p><div>
+  <pre><code class='r'>KnitPost &amp;lt;&amp;ndash; function(input, base.url = &amp;ldquo;/&amp;rdquo;) {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;require(knitr)
+opts_knit$set(base.url = base.url)
+fig.path &amp;lt;- paste0(&quot;figs/&quot;, sub(&quot;.Rmd$&quot;, &quot;&quot;, basename(input)), &quot;/&quot;)
+opts_chunk$set(fig.path = fig.path)
+opts_chunk$set(fig.cap = &quot;center&quot;)
+render_jekyll()
+knit(input, envir = parent.frame())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}
+KnitPost(&amp;ldquo;2012-07-03-knitr-jekyll.Rmd&amp;rdquo;)</code></pre>
+</div>
+</p>
+
+<h3>Step 3</h3>
+
+<p>Move the resulting image folder <em>2012-07-03-knitr-jekyll</em> and <strong>Markdown</strong> file
+<em>2012-07-03-knitr-jekyll.md</em> to the local
+<em>jfisher-usgs.github.com</em> <a href="http://git-scm.com/">git</a> repository.
+The KnitPost function assumes that the image folder will be placed in a
+<a href="https://github.com/jfisher-usgs/jfisher-usgs.github.com/tree/master/figs">figs</a>
+folder located at the root of the repository.</p>
+
+<h3>Step 4</h3>
+
+<p>Add the following CSS code to the
+<em>/assets/themes/twitter-2.0/css/bootstrap.min.css</em> file to center images:</p>
+
+<pre><code>[alt=center] {
+  display: block;
+  margin: auto;
+}
+</code></pre>
+
+<p>That&rsquo;s it.</p>
+
+<hr />
+
+<p>Here are a few examples of embedding R code:</p>
+
+<p><div>
+  <pre><code class='r'>summary(cars)</code></pre>
+</div>
+</p>
+
+<p><div>
+  <pre><code class='text'>&lt;/p&gt;
+
+&lt;h2&gt;speed           dist&lt;/h2&gt;
+
+&lt;h2&gt;Min.   : 4.0   Min.   :  2&lt;/h2&gt;
+
+&lt;h2&gt;1st Qu.:12.0   1st Qu.: 26&lt;/h2&gt;
+
+&lt;h2&gt;Median :15.0   Median : 36&lt;/h2&gt;
+
+&lt;h2&gt;Mean   :15.4   Mean   : 43&lt;/h2&gt;
+
+&lt;h2&gt;3rd Qu.:19.0   3rd Qu.: 56&lt;/h2&gt;
+
+&lt;h2&gt;Max.   :25.0   Max.   :120&lt;/h2&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p><div>
+  <pre><code class='r'>par(mar = c(4, 4, 0.1, 0.1), omi = c(0, 0, 0, 0))
+plot(cars)</code></pre>
+</div>
+</p>
+
+<p><img src="/figs/2012-07-03-knitr-jekyll/fig1.png" alt="center" /></p>
+
+<h5>Figure 1: Caption</h5>
+
+<p><div>
+  <pre><code class='r'>par(mar = c(2.5, 2.5, 0.5, 0.1), omi = c(0, 0, 0, 0))
+filled.contour(volcano)</code></pre>
+</div>
+</p>
+
+<p><img src="/figs/2012-07-03-knitr-jekyll/fig2.png" alt="center" /></p>
+
+<h5>Figure 2: Caption</h5>
+
+<p>And don&rsquo;t forget your session information for proper reproducible research.</p>
+
+<p><div>
+  <pre><code class='r'>sessionInfo()</code></pre>
+</div>
+</p>
+
+<p><div>
+  <pre><code class='text'>&lt;/p&gt;
+
+&lt;h2&gt;R version 3.0.2 (2013-09-25)&lt;/h2&gt;
+
+&lt;h2&gt;Platform: i386-w64-mingw32/i386 (32-bit)&lt;/h2&gt;
+
+&lt;h2&gt;&lt;/h2&gt;
+
+&lt;h2&gt;locale:&lt;/h2&gt;
+
+&lt;h2&gt;[1] LC_COLLATE=English_United States.1252&lt;/h2&gt;
+
+&lt;h2&gt;[2] LC_CTYPE=English_United States.1252&lt;/h2&gt;
+
+&lt;h2&gt;[3] LC_MONETARY=English_United States.1252&lt;/h2&gt;
+
+&lt;h2&gt;[4] LC_NUMERIC=C&lt;/h2&gt;
+
+&lt;h2&gt;[5] LC_TIME=English_United States.1252&lt;/h2&gt;
+
+&lt;h2&gt;&lt;/h2&gt;
+
+&lt;h2&gt;attached base packages:&lt;/h2&gt;
+
+&lt;h2&gt;[1] stats     graphics  grDevices utils     datasets  methods   base&lt;/h2&gt;
+
+&lt;h2&gt;&lt;/h2&gt;
+
+&lt;h2&gt;other attached packages:&lt;/h2&gt;
+
+&lt;h2&gt;[1] knitr_1.5&lt;/h2&gt;
+
+&lt;h2&gt;&lt;/h2&gt;
+
+&lt;h2&gt;loaded via a namespace (and not attached):&lt;/h2&gt;
+
+&lt;h2&gt;[1] evaluate_0.5.1 formatR_0.10   stringr_0.6.2  tools_3.0.2&lt;/h2&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+</feed>
