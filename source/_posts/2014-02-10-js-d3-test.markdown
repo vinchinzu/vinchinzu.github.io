@@ -52,7 +52,10 @@ categories:
 
 <div id='test-1'></div>
 
+
+<!--
+
 <script type="text/javascript">
   d3.select("#test-1").append("p").text("New paragraph!");
 </script>
-
+-->

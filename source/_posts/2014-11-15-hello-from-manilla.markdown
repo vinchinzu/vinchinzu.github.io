@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Hello from Manilla"
+title: "Manilla, Phillipines"
 date: 2014-11-15 04:54:32 -0600
 comments: true
 categories: 
@@ -8,3 +8,6 @@ categories:
 
 Traveling in the Phillipines. Excellent Place
 Testing uploads from new computer. 
+
+*Problem:* 
+Pushing pictures to blog from CLI. 
