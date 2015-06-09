@@ -10,3 +10,5 @@ categories:
 *Problem:* First test setup from a Mac
 
 *Solution:* The dev environment much simpler to setup than on a windows laptop. 
+
+Adding Graphics
