@@ -4,7 +4,7 @@
   <title><![CDATA[Streaming Longitude]]></title>
   <link href="http://vinchinzu.github.io/atom.xml" rel="self"/>
   <link href="http://vinchinzu.github.io/"/>
-  <updated>2015-06-09T08:15:00-05:00</updated>
+  <updated>2015-06-09T08:32:30-05:00</updated>
   <id>http://vinchinzu.github.io/</id>
   <author>
     <name><![CDATA[Lucas Vinze]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Hello]]></title>
-    <link href="http://vinchinzu.github.io/blog/2015/06/09/hello/"/>
+    <link href="http://vinchinzu.github.io/blog/2015/06/09/Buongiorno/"/>
     <updated>2015-06-09T08:03:49-05:00</updated>
-    <id>http://vinchinzu.github.io/blog/2015/06/09/hello</id>
+    <id>http://vinchinzu.github.io/blog/2015/06/09/Buongiorno</id>
     <content type="html"><![CDATA[<p>OK</p>
 ]]></content>
   </entry>
