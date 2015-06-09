@@ -12,3 +12,4 @@ categories:
 *Solution:* The dev environment much simpler to setup than on a windows laptop. 
 
 Adding Graphics
+
