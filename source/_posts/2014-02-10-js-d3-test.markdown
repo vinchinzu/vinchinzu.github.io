@@ -3,12 +3,12 @@ layout: post
 title: "js d3 test"
 date: 2014-02-10 14:31:48 -0600
 comments: true
-categories: 
+categories:
 ---
 
-<script src="http://d3js.org/d3.v2.js"></script> 
+<script src="http://d3js.org/d3.v2.js"></script>
 
-*Problem:* Adding scalable vector images (svg) files within the octopress blogging framework. This is a prerequisite to usign the D3 javascript library that allows to build powerful visualization and data-driven pages. 
+*Problem:* Adding scalable vector images (svg) files within the octopress blogging framework. This is a prerequisite to usign the D3 javascript library that allows to build powerful visualization and data-driven pages.
 
 
 
@@ -53,9 +53,9 @@ categories:
 <div id='test-1'></div>
 
 
-<!--
 
 <script type="text/javascript">
-  d3.select("#test-1").append("p").text("New paragraph!");
+  d3.select("#test-1").append("p").text("This paragraph is generate with JS:  ' d3.select("#test-1").append("p").text(  ' ");
 </script>
--->
+
+
