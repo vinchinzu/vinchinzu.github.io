@@ -9,7 +9,8 @@
   <meta name="author" content="Lucas Vinze">
 
   
-  <meta name="description" content="Problem: I last updated the world beer trade in Feb 2014. The comtrade webstie now has a nice API interface that are linked to the databases. &hellip;">
+  <meta name="description" content="Problem: I last updated the world beer trade in Feb 2014. The comtrade webstie now has a nice API interface that are linked to the databases.
+The old &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,9 +94,144 @@
   </header>
 
 
-<div class="entry-content"><p><em>Problem:</em> I last updated the world beer trade in Feb 2014. The comtrade webstie now has a nice API interface that are linked to the databases.</p>
+<div class="entry-content"><p><em>Problem:</em> I last updated the world beer trade in Feb 2014. The comtrade webstie now has a nice API interface that are linked to the databases.
+The old database setup allowed for 1000 records per query, but the new API allows for 50000 records per request.</p>
 
 <p><em>Solution:</em> A guide to the UN Comtrade data API with R can be found <a href="http://comtrade.un.org/data/Doc/api/ex/r">here</a></p>
+
+<p>Sample download to csv or
+<a href="http://comtrade.un.org/api/get?max=50000&amp;type=C&amp;freq=M&amp;px=HS&amp;ps=201504&amp;r=826&amp;p=0&amp;rg=all&amp;cc=AG2&amp;fmt=csv">http://comtrade.un.org/api/get?max=50000&amp;type=C&amp;freq=M&amp;px=HS&amp;ps=201504&amp;r=826&amp;p=0&amp;rg=all&amp;cc=AG2&amp;fmt=csv</a></p>
+
+<p>Getting Json, csv, and</p>
+
+<div>
+  <pre><code class='r'>library(&quot;rjson&quot;)
+s1 &lt;- get.Comtrade(r=&quot;842&quot;, p=&quot;124,484&quot;)
+s2 &lt;- get.Comtrade(r=&quot;842&quot;, p=&quot;124,484&quot;, fmt=&quot;csv&quot;)
+#s3 &lt;- get.Comtrade(r=&quot;842&quot;, p=&quot;124,484&quot;,ps=&quot;201501,201502,201503&quot;, freq=&quot;M&quot;, cc=&quot;2203&quot;,fmt=&quot;csv&quot;)
+s4 &lt;- get.Comtrade(r=&quot;842&quot;, p=&quot;all&quot;,ps=&quot;201503&quot;, freq=&quot;M&quot;, cc=&quot;2203&quot;,fmt=&quot;csv&quot;)
+
+#Get multiple countries, monthly data, by month: rg=2 (&quot;exports&quot;), cc=&quot;2203&quot; (&quot;beer&quot;)
+s5 &lt;- get.Comtrade(r=&quot;842,276&quot;, rg=&quot;2&quot;,p=&quot;all&quot;,ps=&quot;201403&quot;, freq=&quot;M&quot;, cc=&quot;2203&quot;,fmt=&quot;csv&quot;, max=&quot;50000&quot;)
+
+#Notes not all data my present, for examples German data from two months ago, not yet listed.</code></pre>
+</div>
+
+
+<p>Set up the network graphing</p>
+
+<div>
+  <pre><code class='r'>library(network)
+library(plyr)
+
+
+df = s4
+## Take only the trade
+
+
+#Update new column names from new API format. (&quot;ReporterDescription == Reporter&quot;)
+Ex.df = subset(df,subset = Trade.Flow == &quot;Exports&quot;, 
+                   c(&quot;Reporter&quot;, &quot;Partner&quot;, &quot;Trade.Value..US..&quot;))
+Ex.df &lt;- Ex.df[!Ex.df$Partner== &quot;World&quot;,]
+Ex.df &lt;- Ex.df[!Ex.df$Reporter == &quot;EU-27&quot;,]
+
+Ex.df$Value &lt;- Ex.df$Trade.Value..US../1000
+
+## Sort the data and take only the top 80% of the trade
+Ex.df = arrange(Ex.df, desc(Value))
+
+Ex.df$sWine = scale(Ex.df$Value, center = FALSE)
+Ex.df$cs = cumsum(as.numeric(Ex.df$Value))
+Ex.df[Ex.df[, 1] == &quot;China, Hong Kong SAR &quot;, 1] = &quot;China, Hong Kong SAR&quot;
+
+## Adjust Top Percentage to be included
+Final.df = subset(Ex.df, cs &lt; tail(Ex.df$cs, 1) * 0.9)
+
+## Set edge and arrow size
+Final.df$edgeSize = with(Final.df, Value/sum(Value))
+Final.df$arrowSize = ifelse(Final.df$edgeSize * 30 &lt; 0.5 , 0.5,
+                                Final.df$edgeSize * 15)
+
+## Create the network and plot
+net = network(Final.df[, 1:2])
+plot(net, displaylabels = TRUE, label.col = &quot;steelblue&quot;,
+     edge.lwd = c(Final.df$edgeSize) * 100,
+     arrowhead.cex = c(Final.df$arrowSize),
+     label.cex = 0.5, vertex.border = &quot;white&quot;,
+     vertex.col = &quot;skyblue&quot;, edge.col = rgb(0, 0, 0, alpha = 0.5))
+
+
+
+
+
+pdf(file=&#39;pdfplot&#39;)
+plot(net, displaylabels = TRUE, label.col = &quot;steelblue&quot;,
+     edge.lwd = c(Final.df$edgeSize) * 100,
+     arrowhead.cex = c(Final.df$arrowSize),
+     label.cex = 0.5, vertex.border = &quot;white&quot;,
+     vertex.col = &quot;skyblue&quot;, edge.col = rgb(0, 0, 0, alpha = 0.5))
+dev.off()</code></pre>
+</div>
+
+
+
+
+<div>
+  <pre><code class='r'>get.Comtrade &lt;- function(url=&quot;http://comtrade.un.org/api/get?&quot;
+                         ,maxrec=50000
+                         ,type=&quot;C&quot;
+                         ,freq=&quot;A&quot;
+                         ,px=&quot;HS&quot;
+                         ,ps=&quot;now&quot;
+                         ,r
+                         ,p
+                         ,rg=&quot;all&quot;
+                         ,cc=&quot;TOTAL&quot;
+                         ,fmt=&quot;json&quot;
+)
+{
+  string&lt;- paste(url
+                 ,&quot;max=&quot;,maxrec,&quot;&amp;&quot; #maximum no. of records returned
+                 ,&quot;type=&quot;,type,&quot;&amp;&quot; #type of trade (c=commodities)
+                 ,&quot;freq=&quot;,freq,&quot;&amp;&quot; #frequency
+                 ,&quot;px=&quot;,px,&quot;&amp;&quot; #classification
+                 ,&quot;ps=&quot;,ps,&quot;&amp;&quot; #time period
+                 ,&quot;r=&quot;,r,&quot;&amp;&quot; #reporting area
+                 ,&quot;p=&quot;,p,&quot;&amp;&quot; #partner country
+                 ,&quot;rg=&quot;,rg,&quot;&amp;&quot; #trade flow
+                 ,&quot;cc=&quot;,cc,&quot;&amp;&quot; #classification code
+                 ,&quot;fmt=&quot;,fmt        #Format
+                 ,sep = &quot;&quot;
+  )
+  
+  if(fmt == &quot;csv&quot;) {
+    raw.data&lt;- read.csv(string,header=TRUE)
+    return(list(validation=NULL, data=raw.data))
+  } else {
+    if(fmt == &quot;json&quot; ) {
+      raw.data&lt;- fromJSON(file=string)
+      data&lt;- raw.data$dataset
+      validation&lt;- unlist(raw.data$validation, recursive=TRUE)
+      ndata&lt;- NULL
+      if(length(data)&gt; 0) {
+        var.names&lt;- names(data[[1]])
+        data&lt;- as.data.frame(t( sapply(data,rbind)))
+        ndata&lt;- NULL
+        for(i in 1:ncol(data)){
+          data[sapply(data[,i],is.null),i]&lt;- NA
+          ndata&lt;- cbind(ndata, unlist(data[,i]))
+        }
+        ndata&lt;- as.data.frame(ndata)
+        colnames(ndata)&lt;- var.names
+      }
+      return(list(validation=validation,data =ndata))
+    }
+  }
+}</code></pre>
+</div>
+
+
+
 </div>
 
 
