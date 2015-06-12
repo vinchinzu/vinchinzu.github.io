@@ -9,8 +9,13 @@
   <meta name="author" content="Lucas Vinze">
 
   
-  <meta name="description" content="Problem: I last updated the world beer trade in Feb 2014. The comtrade webstie now has a nice API interface that are linked to the databases.
-The old &hellip;">
+  <meta name="description" content="Running the test from the Comtrade API site: .bar { fill: steelblue;
+}
+.bar:hover { fill: brown;
+}
+.axis { font: 10px sans-serif;
+}
+.axis path, . &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -68,6 +73,190 @@ The old &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/12/d3-test-with-trade-data/">D3 Test With Trade Data</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-12T12:06:58-05:00" pubdate data-updated="true">Jun 12<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><script src="http://d3js.org/d3.v3.js"></script>
+
+
+<h1>Running the test from the Comtrade API site:</h1>
+
+<div>
+  <style type="text/css">
+
+.bar {
+    fill: steelblue;
+}
+.bar:hover {
+    fill: brown;
+}
+.axis {
+    font: 10px sans-serif;
+}
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.x.axis path {
+    display: none;
+}
+  </style>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+  var data = [6, 1, 2, 3, 5, 4,8];
+
+  var margin = {top: 40, right: 40, bottom: 40, left: 40},
+      width = $('.entry-content').width(),
+      height = 300;
+
+  $(window).resize(function() {
+    width = $('.entry-content').width();
+  });
+
+</script>
+
+
+
+
+<!-- D3.js Chart -->
+
+
+
+
+<div id='chart-1'></div>
+
+
+
+
+<script type='text/javascript'>
+
+
+var margin = {
+    top: 20,
+    right: 20,
+    bottom: 30,
+    left: 40
+},
+width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(10)
+    .tickFormat(function (d) {
+        var prefix = d3.formatPrefix(d);
+        return prefix.scale(d) + prefix.symbol;
+    })
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.json("http://comtrade.un.org/api/get?max=500&type=C&freq=A&previewMaxRecords=500&downloadMaxRecords=50000&px=HS&ps=2013%2C2012%2C2011%2C2010%2C2009&r=398&p=0&rg=2&cc=TOTAL", function (error, json) {
+    debugger;
+    data = json.dataset;
+    data = data.sort(compare);
+
+        x.domain(data.map(function (d) {
+        return d.yr;
+    }));
+    y.domain([0, d3.max(data, function (d) {
+        return d.TradeValue;
+    })]);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Trade Value");
+
+    svg.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function (d) {
+        return x(d.yr);
+    })
+        .attr("width", x.rangeBand())
+        .attr("y", function (d) {
+        return y(d.TradeValue);
+    })
+        .attr("height", function (d) {
+        return height - y(d.TradeValue);
+    });
+
+});
+
+function compare(a,b) {
+  if (a.TradeValue < b.TradeValue)
+     return -1;
+  if (a.TradeValue > b.TradeValue)
+    return 1;
+  return 0;
+}
+</script>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -547,12 +736,10 @@ $(function() {
   </header>
 
 
-  <div class="entry-content"><script src="http://d3js.org/d3.v2.js"></script>
+  <div class="entry-content"><script src="http://d3js.org/d3.v3.js"></script>
 
 
-<p></p>
-
-<h2>See what can be done with Javascript:</h2>
+<h1>#</h1>
 
 <p>I wanted to add dynamic graphs on the static build with Jekyll and Octopress, and still be able to push directly from the terminal line. This seems like a decent solution to start with. The trick is:</p>
 
@@ -1119,6 +1306,10 @@ filled.contour(volcano)</code></pre>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/06/12/d3-test-with-trade-data/">D3 Test With Trade Data</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/06/09/World-Beer-Trade-II/">World Beer Trade Update</a>
       </li>
     
@@ -1140,10 +1331,6 @@ filled.contour(volcano)</code></pre>
     
       <li class="post">
         <a href="/blog/2014/02/10/world-beer-trade/">World Beer Trade</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/10/chinese-the-new-lingua-franca/">Chinese the New Lingua Franca</a>
       </li>
     
   </ul>

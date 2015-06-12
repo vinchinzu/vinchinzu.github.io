@@ -5,11 +5,17 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Posting With D3 Graphics - Streaming Longitude</title>
+  <title>D3 Test With Trade Data - Streaming Longitude</title>
   <meta name="author" content="Lucas Vinze">
 
   
-  <meta name="description" content="# I wanted to add dynamic graphs on the static build with Jekyll and Octopress, and still be able to push directly from the terminal line. This &hellip;">
+  <meta name="description" content="Running the test from the Comtrade API site: .bar { fill: steelblue;
+}
+.bar:hover { fill: brown;
+}
+.axis { font: 10px sans-serif;
+}
+.axis path, . &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript">
+  <link rel="canonical" href="http://vinchinzu.github.io/blog/2015/06/12/d3-test-with-trade-data">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Streaming Longitude" type="application/atom+xml">
@@ -70,7 +76,7 @@
   
   <header>
     
-      <h1 class="entry-title">Posting With D3 Graphics</h1>
+      <h1 class="entry-title">D3 Test With Trade Data</h1>
     
     
       <p class="meta">
@@ -86,7 +92,7 @@
   
 
 
-<time datetime="2014-02-10T11:45:37-06:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
+<time datetime="2015-06-12T12:06:58-05:00" pubdate data-updated="true">Jun 12<span>th</span>, 2015</time>
         
       </p>
     
@@ -96,41 +102,28 @@
 <div class="entry-content"><script src="http://d3js.org/d3.v3.js"></script>
 
 
-<h1>#</h1>
-
-<p>I wanted to add dynamic graphs on the static build with Jekyll and Octopress, and still be able to push directly from the terminal line. This seems like a decent solution to start with. The trick is:</p>
-
-<ul>
-<li>adding the style tags in a div at the top</li>
-<li><p>adding the javascript source to d3 at the top of the post  <div>
-<pre><code class='html'>&lt;script src=&quot;<a href="http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;">http://d3js.org/d3.v2.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;</a></code></pre>
-</div></p></li>
-<li><p>Adjusting the margins and container sizes</p></li>
-<li>Add    a div with ID to hold the graph</li>
-</ul>
-
-
-<p>Start with d3 library: with this tutorial <a href="http://robdodson.me/blog/2012/05/02/d3-js-and-octopress/">here</a></p>
+<h1>Running the test from the Comtrade API site:</h1>
 
 <div>
   <style type="text/css">
 
-    .chart {
-      font-family: Arial, sans-serif;
-      font-size: 10px;
-      margin-top: -40px;
-    }
-
-    .bar {
-      fill: steelblue;
-    }
-
-    .axis path, .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
-
+.bar {
+    fill: steelblue;
+}
+.bar:hover {
+    fill: brown;
+}
+.axis {
+    font: 10px sans-serif;
+}
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.x.axis path {
+    display: none;
+}
   </style>
 </div>
 
@@ -165,66 +158,92 @@
 
 
 <script type='text/javascript'>
-(function() {
 
-  function draw() {
 
-    $('#chart-1').empty();
+var margin = {
+    top: 20,
+    right: 20,
+    bottom: 30,
+    left: 40
+},
+width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
-    var x = d3.scale.linear()
-        .domain([0, d3.max(data)])
-        .range([0, width - margin.left - margin.right]);
+var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
 
-    var y = d3.scale.ordinal()
-        .domain(d3.range(data.length))
-        .rangeRoundBands([height - margin.top - margin.bottom, 0], 0.2);
+var y = d3.scale.linear()
+    .range([height, 0]);
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient('bottom')
-        .tickPadding(8);
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
 
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient('left')
-        .tickPadding(8)
-        .tickSize(0);
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(10)
+    .tickFormat(function (d) {
+        var prefix = d3.formatPrefix(d);
+        return prefix.scale(d) + prefix.symbol;
+    })
 
-    var svg = d3.select('#chart-1').append('svg')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('class', 'chart')
-      .append('g')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.selectAll('.chart')
-        .data(data)
-        .enter().append('rect')
-        .attr('class', 'bar')
-        .attr('y', function(d, i) { return y(i) })
-        .attr('width', x)
-        .attr('height', y.rangeBand());
+d3.json("http://comtrade.un.org/api/get?max=500&type=C&freq=A&previewMaxRecords=500&downloadMaxRecords=50000&px=HS&ps=2013%2C2012%2C2011%2C2010%2C2009&r=398&p=0&rg=2&cc=TOTAL", function (error, json) {
+    debugger;
+    data = json.dataset;
+    data = data.sort(compare);
 
-    svg.append('g')
-        .attr('class', 'x axis')
-        .attr('transform', 'translate(0, ' + y.rangeExtent()[1] + ')')
+        x.domain(data.map(function (d) {
+        return d.yr;
+    }));
+    y.domain([0, d3.max(data, function (d) {
+        return d.TradeValue;
+    })]);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
-    svg.append('g')
-        .attr('class', 'y axis')
+    svg.append("g")
+        .attr("class", "y axis")
         .call(yAxis)
-      .selectAll('text')
-        .text(function(d) { return String.fromCharCode(d + 65); });
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Trade Value");
 
-  }
+    svg.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function (d) {
+        return x(d.yr);
+    })
+        .attr("width", x.rangeBand())
+        .attr("y", function (d) {
+        return y(d.TradeValue);
+    })
+        .attr("height", function (d) {
+        return height - y(d.TradeValue);
+    });
 
-  draw();
+});
 
-  $(window).resize(function() {
-    draw();
-  });
-
-})();
+function compare(a,b) {
+  if (a.TradeValue < b.TradeValue)
+     return -1;
+  if (a.TradeValue > b.TradeValue)
+    return 1;
+  return 0;
+}
 </script>
 
 
@@ -251,7 +270,7 @@
   
 
 
-<time datetime="2014-02-10T11:45:37-06:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
+<time datetime="2015-06-12T12:06:58-05:00" pubdate data-updated="true">Jun 12<span>th</span>, 2015</time>
       
 
 
@@ -259,7 +278,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript/" data-via="lukevinze" data-counturl="http://vinchinzu.github.io/blog/2014/02/10/add-some-javascript/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://vinchinzu.github.io/blog/2015/06/12/d3-test-with-trade-data/" data-via="lukevinze" data-counturl="http://vinchinzu.github.io/blog/2015/06/12/d3-test-with-trade-data/" >Tweet</a>
   
   
   
@@ -270,10 +289,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/02/10/world-beer-trade/" title="Previous Post: World Beer Trade">&laquo; World Beer Trade</a>
+        <a class="basic-alignment left" href="/blog/2015/06/09/World-Beer-Trade-II/" title="Previous Post: World Beer Trade Update">&laquo; World Beer Trade Update</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/02/10/highcharts/" title="Next Post: HighCharts">HighCharts &raquo;</a>
       
     </p>
   </footer>
