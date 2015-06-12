@@ -3,18 +3,17 @@ layout: post
 title: "Posting with D3 graphics"
 date: 2014-02-10 11:45:37 -0600
 comments: true
-categories: 
+categories:
 ---
 
-<script src="http://d3js.org/d3.v2.js"></script> 
+<script src="http://d3js.org/d3.v3.js"></script>
 
 
-## See what can be done with Javascript:
-
+##
 I wanted to add dynamic graphs on the static build with Jekyll and Octopress, and still be able to push directly from the terminal line. This seems like a decent solution to start with. The trick is:
 
 * adding the style tags in a div at the top
-* adding the javascript source to d3 at the top of the post	 {% highlight html %} <script src="http://d3js.org/d3.v2.js"></script>  {% endhighlight %} 
+* adding the javascript source to d3 at the top of the post	 {% highlight html %} <script src="http://d3js.org/d3.v2.js"></script>  {% endhighlight %}
 * Adjusting the margins and container sizes
 * Add	 a div with ID to hold the graph
 
