@@ -99,7 +99,7 @@ filled.contour(volcano)
 
 ##### Figure 2: Caption
 
-And don't forget your session information for proper reproducible research.
+And don't forget your session information for make results more easily reproduced.
 
 {% highlight r %}
 sessionInfo()
