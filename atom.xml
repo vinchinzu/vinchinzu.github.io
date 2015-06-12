@@ -4,7 +4,7 @@
   <title><![CDATA[Streaming Longitude]]></title>
   <link href="http://vinchinzu.github.io/atom.xml" rel="self"/>
   <link href="http://vinchinzu.github.io/"/>
-  <updated>2015-06-09T08:32:30-05:00</updated>
+  <updated>2015-06-12T11:07:46-05:00</updated>
   <id>http://vinchinzu.github.io/</id>
   <author>
     <name><![CDATA[Lucas Vinze]]></name>
@@ -14,24 +14,13 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Hello]]></title>
-    <link href="http://vinchinzu.github.io/blog/2015/06/09/Buongiorno/"/>
-    <updated>2015-06-09T08:03:49-05:00</updated>
-    <id>http://vinchinzu.github.io/blog/2015/06/09/Buongiorno</id>
-    <content type="html"><![CDATA[<p>OK</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Data Viz Sample]]></title>
-    <link href="http://vinchinzu.github.io/blog/2015/06/09/data-viz-sample/"/>
+    <title type="html"><![CDATA[World Beer Trade Update]]></title>
+    <link href="http://vinchinzu.github.io/blog/2015/06/09/World-Beer-Trade-II/"/>
     <updated>2015-06-09T07:23:00-05:00</updated>
-    <id>http://vinchinzu.github.io/blog/2015/06/09/data-viz-sample</id>
-    <content type="html"><![CDATA[<p><em>Problem:</em> First test setup from a Mac</p>
+    <id>http://vinchinzu.github.io/blog/2015/06/09/World-Beer-Trade-II</id>
+    <content type="html"><![CDATA[<p><em>Problem:</em> I last updated the world beer trade in Feb 2014. The comtrade webstie now has a nice API interface that are linked to the databases.</p>
 
-<p><em>Solution:</em> The dev environment much simpler to setup than on a windows laptop.</p>
-
-<p>Adding Graphics</p>
+<p><em>Solution:</em> A guide to the UN Comtrade data API with R can be found <a href="http://comtrade.un.org/data/Doc/api/ex/r">here</a></p>
 ]]></content>
   </entry>
   
